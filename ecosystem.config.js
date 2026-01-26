@@ -17,11 +17,10 @@ module.exports = {
     {
       name: "stockops-web",
       cwd: "./apps/web",
-      script: "pnpm",
-      args: "start",
+      script: "npx",
+      args: 'serve -s apps/web/dist -l 5173',
       env: {
-        NODE_ENV: "production",
-        PORT: 5173
+        NODE_ENV: "production",      
       }
     }
   ]
