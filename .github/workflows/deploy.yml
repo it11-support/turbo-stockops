@@ -1,0 +1,89 @@
+name: Deploy Production
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd /home/stockops/turbo-stockops
+            git pull origin main
+
+            # Backend env
+            cat > apps/api/.env <<EOF
+            DATABASE_USER=${{ secrets.DATABASE_USER }}
+            DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+            DATABASE_NAME=${{ secrets.DATABASE_NAME }}
+            DATABASE_HOST=${{ secrets.DATABASE_HOST }}
+            DATABASE_PORT=${{ secrets.DATABASE_PORT }}
+            DATABASE_URL=mysql://${{ secrets.DATABASE_USER }}:${{ secrets.DATABASE_PASSWORD }}@${{ secrets.DATABASE_HOST }}:${{ secrets.DATABASE_PORT }}/${{ secrets.DATABASE_NAME }}
+            MSSQL_API=${{ secrets.MSSQL_API }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            JWT_EXPIRES_IN=${{ secrets.JWT_EXPIRES_IN }}
+            TZ=Asia/Makassar
+            NODE_ENV=production
+            PORT=4000
+            EOF
+
+            # Frontend env
+            cat > apps/web/.env <<EOF
+            VITE_BASE_DOMAIN=${{ secrets.VITE_BASE_DOMAIN }}
+            VITE_API_BASE_URL="${{ secrets.VITE_API_BASE_URL }}"
+            VITE_SITE_NAME=${{ secrets.VITE_SITE_NAME }}
+            VITE_STIE_DESC=${{ secrets.VITE_STIE_DESC }}
+            VITE_SOCKET_IO_URL=${{ secrets.VITE_SOCKET_IO_URL }}
+            NODE_ENV=production
+            PORT=5173
+            TZ=Asia/Makassar
+            EOF
+
+            # Install dependencies
+            pnpm install --frozen-lockfile
+
+            # Backend prisma generate & build
+            pnpm --filter ./apps/api db:generate
+            pnpm --filter ./apps/api build
+
+            # Frontend build            
+            pnpm --filter ./apps/web build
+
+            # PM2 backend
+            npx pm2 describe stockops-api > /dev/null
+            if [ $? -ne 0 ]; then
+              npx pm2 start ecosystem.config.js --only stockops-api
+            else
+              npx pm2 reload ecosystem.config.js --only stockops-api
+            fi
+
+            # PM2 frontend
+            npx pm2 describe stockops-web > /dev/null
+            if [ $? -ne 0 ]; then
+              npx pm2 start ecosystem.config.js --only stockops-web
+            else
+              npx pm2 reload ecosystem.config.js --only stockops-web
+            fi
+
+            npx pm2 save
