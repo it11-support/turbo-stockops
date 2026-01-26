@@ -1,7 +1,7 @@
-import prisma from "@/libs/prisma";
-import { areaListService } from "../area";
-import { pick_listsWhereInput } from "@/generated/prisma/models";
-import { pick_lists_status } from "@/generated/prisma/enums";
+import prisma from "@/libs/prisma/index.js";
+import { areaListService } from "../area/index.js";
+import { pick_listsWhereInput } from "@/generated/prisma/models/pick_lists.js";
+import { pick_lists_status } from "@/generated/prisma/enums.js";
 
 type PickListParams = {
   Customer: string;

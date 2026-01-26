@@ -1,11 +1,11 @@
 import { Router } from "express";
-import authRoute from "./auth";
-import orderRoutes from "./orders";
-import areaRoutes from "./area";
-import customerRoutes from "./customers";
-import userRoutes from "./user";
-import pickListRoutes from "./picklist";
-import PickListsRoutes from "./picklists";
+import authRoute from "./auth/index.js";
+import orderRoutes from "./orders/index.js";
+import areaRoutes from "./area/index.js";
+import customerRoutes from "./customers/index.js";
+import userRoutes from "./user/index.js";
+import pickListRoutes from "./picklist/index.js";
+import PickListsRoutes from "./picklists/index.js";
 
 const router = Router();
 

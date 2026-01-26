@@ -1,4 +1,4 @@
-import prisma from "@/libs/prisma";
+import prisma from "@/libs/prisma/index.js";
 import path from "path";
 import fs from "fs";
 import csv from "csv-parser";

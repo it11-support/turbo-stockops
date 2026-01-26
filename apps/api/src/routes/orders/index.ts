@@ -4,8 +4,8 @@ import {
   orderExportController,
   orderIdListController,
   orderListController,
-} from "@/controllers";
-import { authMiddleware } from "@/utils";
+} from "@/controllers/index.js";
+import { authMiddleware } from "@/utils/index.js";
 import { Router } from "express";
 
 const router = Router();

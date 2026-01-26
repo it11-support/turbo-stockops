@@ -1,8 +1,8 @@
 import { IUser } from "@turbo-stockops/types";
-import { verifyJwt } from "@/utils/jwt";
+import { verifyJwt } from "@/utils/jwt/index.js";
 import { NextFunction, Request, Response } from "express";
 import { JwtPayload } from "jsonwebtoken";
-import prisma from "@/libs/prisma";
+import prisma from "@/libs/prisma/index.js";
 
 export type IUserPayload = Omit<IUser, "role"> & {
   role: string;

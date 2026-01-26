@@ -1,4 +1,4 @@
-import { MSSQL_API } from "@/utils";
+import { MSSQL_API } from "@/utils/index.js";
 
 export const areaListService = async () => {
   const apiUrl = `${MSSQL_API}/areas`;

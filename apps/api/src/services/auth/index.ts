@@ -1,5 +1,5 @@
-import prisma from "@/libs/prisma";
-import { signJwt, verifyPassword } from "@/utils";
+import prisma from "@/libs/prisma/index.js";
+import { signJwt, verifyPassword } from "@/utils/index.js";
 
 export const loginService = async (username: string, password: string) => {
   try {

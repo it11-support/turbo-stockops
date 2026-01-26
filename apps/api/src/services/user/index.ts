@@ -1,5 +1,5 @@
-import { usersWhereInput } from "@/generated/prisma/models";
-import prisma from "@/libs/prisma";
+import { usersWhereInput } from "@/generated/prisma/models/users.js";
+import prisma from "@/libs/prisma/index.js";
 import bcrypt from "bcryptjs";
 
 type UserListParams = {

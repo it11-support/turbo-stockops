@@ -1,5 +1,5 @@
-import { loginService } from "@/services";
-import { apiResponse } from "@/utils";
+import { loginService } from "@/services/index.js";
+import { apiResponse } from "@/utils/index.js";
 import { Request, Response } from "express";
 
 export const loginController = async (req: Request, res: Response) => {

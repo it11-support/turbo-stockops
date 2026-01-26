@@ -1,11 +1,11 @@
-import { ordersWhereInput } from "@/generated/prisma/models";
-import prisma from "@/libs/prisma";
+import { ordersWhereInput } from "@/generated/prisma/models/orders.js";
+import prisma from "@/libs/prisma/index.js";
 import {
   insertIntoItemTable,
   insertToOrderTable,
   MSSQL_API,
   updateItemsTableFromCSV,
-} from "@/utils";
+} from "@/utils/index.js";
 import dayjs from "dayjs";
 import { OrderListParams } from "@turbo-stockops/types";
 

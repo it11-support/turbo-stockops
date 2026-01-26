@@ -4,8 +4,8 @@ import {
   userListService,
   userRegisterService,
   userUpdateService,
-} from "@/services";
-import { apiResponse, PERPAGE } from "@/utils";
+} from "@/services/index.js";
+import { apiResponse, PERPAGE } from "@/utils/index.js";
 import { Request, Response } from "express";
 
 export const getPickersController = async (req: Request, res: Response) => {

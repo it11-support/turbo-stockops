@@ -4,8 +4,8 @@ import {
   userListController,
   userRegisterController,
   userUpdateController,
-} from "@/controllers";
-import { authMiddleware, roleMiddleware } from "@/utils";
+} from "@/controllers/index.js";
+import { authMiddleware, roleMiddleware } from "@/utils/index.js";
 import { Router } from "express";
 
 const router = Router();

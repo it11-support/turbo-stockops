@@ -4,8 +4,8 @@ import {
   getOrderDetailsService,
   orderIdListService,
   orderListService,
-} from "@/services/orders";
-import { apiResponse } from "@/utils";
+} from "@/services/orders/index.js";
+import { apiResponse } from "@/utils/index.js";
 import { Request, Response } from "express";
 import qs from "qs";
 

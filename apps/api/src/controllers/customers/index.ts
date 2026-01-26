@@ -1,5 +1,5 @@
-import { customerListService } from "@/services";
-import { apiResponse } from "@/utils";
+import { customerListService } from "@/services/index.js";
+import { apiResponse } from "@/utils/index.js";
 import { Request, Response } from "express";
 
 export const customerListController = async (req: Request, res: Response) => {

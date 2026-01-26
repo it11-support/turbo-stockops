@@ -1,8 +1,8 @@
-import { customerListController } from "@/controllers";
+import { customerListController } from "@/controllers/index.js";
 import { Router } from "express";
-import { authMiddleware } from "@/utils";
+import { authMiddleware } from "@/utils/index.js";
 const router = Router();
 
-router.get("/", customerListController, authMiddleware);
+router.get("/" ,authMiddleware , customerListController);
 
 export default router;

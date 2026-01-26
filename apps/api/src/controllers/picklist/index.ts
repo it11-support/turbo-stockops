@@ -5,8 +5,8 @@ import {
   getPickListsService,
   splitPickListService,
   storePickListService,
-} from "@/services/picklist";
-import { apiResponse } from "@/utils";
+} from "@/services/picklist/index.js";
+import { apiResponse } from "@/utils/index.js";
 import { Request, Response } from "express";
 import qs from "qs";
 

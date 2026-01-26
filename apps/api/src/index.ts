@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
-import router from "./routes";
-import { initCronJobs } from "./cron";
+import router from "./routes/index.js";
+import { initCronJobs } from "./cron.js";
 
 const PORT = process.env.PORT || 4000;
 const TZ = process.env.TZ || "UTC";

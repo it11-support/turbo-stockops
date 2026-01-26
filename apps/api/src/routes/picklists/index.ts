@@ -1,9 +1,9 @@
-import { getPickListsController } from "@/controllers";
-import { authMiddleware } from "@/utils";
+import { getPickListsController } from "@/controllers/index.js";
+import { authMiddleware } from "@/utils/index.js";
 import { Router } from "express";
 
 const router = Router();
 
-router.get("/", getPickListsController, authMiddleware);
+router.get("/",authMiddleware , getPickListsController);
 
 export default router;

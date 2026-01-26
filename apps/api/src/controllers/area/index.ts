@@ -1,5 +1,5 @@
-import { areaListService } from "@/services/area";
-import { apiResponse } from "@/utils";
+import { areaListService } from "@/services/area/index.js";
+import { apiResponse } from "@/utils/index.js";
 import { Request, Response } from "express";
 
 export const areaListController = async (req: Request, res: Response) => {
