@@ -2,6 +2,7 @@ import prisma from "@/libs/prisma/index.js";
 import { areaListService } from "../area/index.js";
 import { pick_listsWhereInput } from "@/generated/prisma/models/pick_lists.js";
 import { pick_lists_status } from "@/generated/prisma/enums.js";
+import dayjs from "dayjs";
 
 type PickListParams = {
   Customer: string;
@@ -38,9 +39,15 @@ interface PickListDetailServiceParams {
 
 export const getPickListService = async () => {
   try {
+    const start = dayjs().subtract(7, "day").startOf("day").toDate();
+    const end = dayjs().endOf("day").toDate();
     const pickList = await prisma.pick_lists.findMany({
       where: {
         status: "open",
+        created_at: {
+          gte: start,
+          lte: end,
+        }
       },
       orderBy: {
         created_at: "desc",
