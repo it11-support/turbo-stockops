@@ -226,9 +226,9 @@ export const orderListService = async (params: OrderListParams) => {
 
   const ordersData = ids.length
     ? await prisma.orders.findMany({
-        where: { id: { in: ids } },
-        orderBy: { DocNum: "desc" },
-      })
+      where: { id: { in: ids } },
+      orderBy: { DocNum: "desc" },
+    })
     : [];
 
   const totalDistinctDocNum = await prisma.orders.groupBy({
@@ -359,3 +359,48 @@ export const formatDocTime = (order: any): string | null => {
 
   return null;
 };
+
+export const syncOrderService = async () => {
+  let closed: any = null;
+
+  const [ordersRes, itemsRes] = await Promise.all([
+    fetch(`${MSSQL_API}/orders`),
+    fetch(`${MSSQL_API}/items`),
+  ]);
+
+  if (!ordersRes.ok || !itemsRes.ok) {
+    throw new Error("Failed to fetch master data");
+  }
+
+  const ordersData = await ordersRes.json();
+  const itemsData = await itemsRes.json();
+
+  await insertToOrderTable(ordersData.orders);
+  await insertIntoItemTable(itemsData.items);
+  await updateItemsTableFromCSV();
+
+  const allOrders = await prisma.orders.findMany({
+    where: { pick_list_details: { none: {} } },
+    select: { DocNum: true },
+  });
+
+  const docNums = allOrders.map((o) => o.DocNum);
+
+  const closedRes = await fetch(`${MSSQL_API}/orders/closed`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ orders: docNums }),
+  });
+
+  closed = await closedRes.json();
+
+  const closedDocNumsInt: number[] = (
+    closed?.closed_orders?.map((o: any) => Number(o.DocNum)) || []
+  ).filter((n: number) => !isNaN(n));
+
+  if (closedDocNumsInt.length) {
+    await prisma.orders.deleteMany({
+      where: { DocNum: { in: closedDocNumsInt } },
+    });
+  }
+}
