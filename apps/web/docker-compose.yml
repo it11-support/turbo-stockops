@@ -1,0 +1,17 @@
+services:
+  react-project:
+    container_name: stock-ops-react
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    volumes:
+      - .:/app
+      - pnpm-store:/app/.pnpm-store
+      - /app/node_modules
+    restart: always
+    ports:
+      - 5173:5173
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+volumes:
+  pnpm-store:

@@ -1,0 +1,64 @@
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  .print\:hidden,
+  .no-print {
+    display: none !important;
+  }
+
+  #print-area {
+    background: white !important;
+    color: black !important;
+    position: static !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 16mm;
+  }
+
+  html, body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background: white !important;
+    color: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tfoot {
+    display: table-footer-group;
+  }
+
+  tr, td, th {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  [class*="text-gray"],
+  [class*="bg-gray"] {
+    color: #000 !important;
+    background-color: #e5e7eb !important;
+  }
+
+   .print-spacer-row {
+    height: 30px;
+  }
+
+  .print-spacer-row th {
+    border: none !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  thead .print-spacer-row:first-child {
+    display: none; /* Jangan tampilkan spacer di halaman pertama */
+  }
+}
