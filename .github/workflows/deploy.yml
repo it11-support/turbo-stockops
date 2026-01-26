@@ -65,10 +65,8 @@ jobs:
 
             # Backend prisma generate & build
             pnpm --filter ./apps/api db:generate
-            pnpm --filter ./apps/api build
-
-            # Frontend build            
-            pnpm --filter ./apps/web build
+           
+            pnpm turbo run build
 
             # PM2 backend
             npx pm2 describe stockops-api > /dev/null
