@@ -496,6 +496,18 @@ export const splitPickListService = async (
   });
 };
 
+export const updatePrintStatusService = async (id: number) => {
+  try {
+    await prisma.pick_lists.update({
+      where: { id },
+      data: { printed_at: new Date() },
+    })
+  } catch (error) {
+    console.error('Failed to update picking status:', error)
+    throw error
+  }
+}
+
 const generateCode = async () => {
   const now = new Date();
   const year = now.getFullYear();

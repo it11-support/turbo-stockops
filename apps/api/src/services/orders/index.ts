@@ -171,6 +171,7 @@ export const orderListService = async (params: OrderListParams) => {
       OR: [
         { CardName: { contains: search } },
         { ItemCode: { contains: search } },
+        { DocNum: { equals: Number(search) } },
       ],
     }),
     ...(due_date && { DocDueDate: new Date(due_date) }),

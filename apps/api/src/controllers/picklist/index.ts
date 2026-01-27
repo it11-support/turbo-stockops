@@ -5,6 +5,7 @@ import {
   getPickListsService,
   splitPickListService,
   storePickListService,
+  updatePrintStatusService,
 } from "@/services/picklist/index.js";
 import { apiResponse } from "@/utils/index.js";
 import { Request, Response } from "express";
@@ -116,3 +117,13 @@ export const pickListsDetailController = async (
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const updatePrintStatusController = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.body;
+    const data = await updatePrintStatusService(Number(id));
+    return apiResponse(res, 200, "Print status updated", data);
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+}
