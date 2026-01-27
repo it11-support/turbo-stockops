@@ -295,19 +295,9 @@ export const getOrderDetailsService = async (pickListId: number) => {
   const data = Object.entries(grouped).map(([docNum, details]) => {
     const order = details[0].order;
 
-    let salesOrderDateTime: string | null = null;
-    if (order?.DocDate) {
-      if (order.DocTime != null) {
-        const docTime = order.DocTime.toString().padStart(4, "0");
-        salesOrderDateTime = `${order.DocDate} ${docTime.slice(0, 2)}:${docTime.slice(2, 4)}`;
-      } else {
-        salesOrderDateTime = order.DocDate;
-      }
-    }
-
     return {
       sales_order_id: Number(docNum), // ✅ sekarang unik
-      sales_order_date: salesOrderDateTime,
+      sales_order_date: formatDocTime(order),
       delivery_date: order?.DocDueDate ?? null,
       customer_id: order?.CardCode ?? null,
       customer_name: order?.CardName ?? null,
@@ -355,10 +345,10 @@ export const formatDocTime = (order: any): string | null => {
     const hour = docTime.substring(0, 2);
     const minute = docTime.substring(2, 4);
 
-    return `${order.DocDate} ${hour}:${minute}`;
+    return `${order.DocDate.toString().slice(0, 10)} ${hour}:${minute}`;
   }
 
-  return null;
+  return `${order.DocDate.toString().slice(0, 10)} 08:00` || order.DocDate.toString();
 };
 
 export const syncOrderService = async () => {
