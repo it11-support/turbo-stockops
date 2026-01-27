@@ -317,15 +317,10 @@ export const getOrderDetailsService = async (pickListId: number) => {
 
 export const exportOrdersService = async (date: string) => {
   try {
-    const start = dayjs(date).startOf("day").toDate();
-    const end = dayjs(date).endOf("day").toDate();
-
+    
     const orders = await prisma.orders.findMany({
       where: {
-        CreateDate: {
-          gte: start,
-          lte: end,
-        },
+        CreateDate: new Date(date)
       },
       distinct: ["DocNum"],
     });
