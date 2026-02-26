@@ -246,3 +246,54 @@ export async function updateItemsTableFromCSV() {
       });
   });
 }
+
+export async function updateBarcodeFromCSV() {
+  // Path file CSV
+  const filePath = path.join(process.cwd(), "database", "files", "barcodes.csv");
+
+  if (!fs.existsSync(filePath)) {
+    throw new Error("CSV file not found or not readable");
+  }
+
+  console.log(`Updating items from CSV: ${filePath}`);
+
+  return new Promise<void>((resolve, reject) => {
+    const updates: Promise<any>[] = [];
+
+    fs.createReadStream(filePath)
+      .pipe(csv())
+      .on("data", (row) => {
+        const { ItemCode, Barcode } = row;
+
+        if (!ItemCode || !Barcode) {
+          console.warn(
+            `Row skipped, missing ItemCode or Barcode: ${JSON.stringify(row)}`,
+          );
+          return;
+        }
+
+        // Update hanya jika record ada
+        updates.push(
+          prisma.items
+            .update({
+              where: { ItemCode },
+              data: { Barcode },
+            })
+            .catch(() => {
+              console.warn(`ItemCode ${ItemCode} not found.`);
+            }),
+        );
+      })
+      .on("end", async () => {
+        try {
+          await Promise.all(updates);
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
+      })
+      .on("error", (err) => {
+        reject(err);
+      });
+  });
+}

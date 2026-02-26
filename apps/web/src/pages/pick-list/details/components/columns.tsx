@@ -37,6 +37,18 @@ export const columns: ColumnDef<PickListDetail>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: 'barcode',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Barcode' />
+    ),
+    cell: ({ row }) => (
+      <>
+        <LongText className='max-w-36'>{row.getValue('barcode')}</LongText>
+      </>
+    ),
+    enableHiding: false,
+  },
+  {
     accessorKey: 'item_name',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Item Name' />

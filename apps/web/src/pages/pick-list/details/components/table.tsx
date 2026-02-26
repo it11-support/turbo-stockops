@@ -60,15 +60,18 @@ export function PickListDetailTable({ columns }: DataTableProps) {
   const groupedData: PickListDetail[] = details.reduce(
     (acc: PickListDetail[], item: PickListDetail) => {
       const code = item.order.ItemCode
+      const barcode = item.order.item.Barcode
       const existing = acc.find((i) => i.order.ItemCode === code)
 
       if (existing) {
         existing.demand = Number(existing.demand) + Number(item.demand)
         existing.picked = Number(existing.picked) + Number(item.picked)
         existing.open_qty = Number(existing.open_qty) + Number(item.open_qty)
+        existing.barcode = existing.barcode ? existing.barcode : barcode
       } else {
         acc.push({
           ...item,
+          barcode,
           demand: Number(item.demand),
           picked: Number(item.picked),
           open_qty: Number(item.open_qty),

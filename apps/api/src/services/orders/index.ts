@@ -4,6 +4,7 @@ import {
   insertIntoItemTable,
   insertToOrderTable,
   MSSQL_API,
+  updateBarcodeFromCSV,
   updateItemsTableFromCSV,
 } from "@/utils/index.js";
 import dayjs from "dayjs";
@@ -364,6 +365,7 @@ export const syncOrderService = async () => {
   await insertToOrderTable(ordersData.orders);
   await insertIntoItemTable(itemsData.items);
   await updateItemsTableFromCSV();
+  await updateBarcodeFromCSV();
 
   const allOrders = await prisma.orders.findMany({
     where: { pick_list_details: { none: {} } },

@@ -6,4 +6,5 @@ export interface Item {
   ItemCode: string
   ItemName: string
   RackNo?: string
+  Barcode?: string
 }

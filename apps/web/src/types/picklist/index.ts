@@ -32,7 +32,8 @@ export interface PickListDetail {
   order: SalesOrderItem
   picked: number
   rack_no: string
-  unit: string
+  unit: string,
+  barcode?: string
 }
 
 export interface Summary {

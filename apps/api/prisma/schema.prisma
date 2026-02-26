@@ -34,6 +34,7 @@ model items {
   ItemCode   String    @unique(map: "items_itemcode_unique") @db.VarChar(255)
   ItemName   String    @db.VarChar(255)
   RackNo     String?   @db.VarChar(255)
+  Barcode    String?   @db.VarChar(255)
   InvntryUom String?   @db.VarChar(255)
   CardCode   String    @db.VarChar(255)
   CardName   String    @db.VarChar(255)
