@@ -5,7 +5,7 @@ import { DataTableColumnHeader } from './headers'
 import LongText from '@/components/long-text'
 import { SalesOrderItem } from '@/types'
 import { useSalesOrder } from '../context/sales-orders-context'
-import { format } from 'date-fns'
+import { format, formatDate } from 'date-fns'
 import { id } from 'date-fns/locale'
 
 export const columns: ColumnDef<SalesOrderItem>[] = [
@@ -103,7 +103,7 @@ export const columns: ColumnDef<SalesOrderItem>[] = [
     ),
     cell: ({ row }) => {
       const { DocDueDate } = row.original
-      return <LongText className='max-w-36'>{DocDueDate}</LongText>
+      return <LongText className='max-w-36'>{formatDate(DocDueDate, 'yyyy-MM-dd')}</LongText>
     },
     enableSorting: true,
     meta: { className: 'w-36' },
