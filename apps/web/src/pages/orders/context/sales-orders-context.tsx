@@ -115,7 +115,7 @@ export default function SalesOrderProvider({ children }: Props) {
   const [currentRow, setCurrentRow] = useState<SalesOrderItem | null>(null)
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 20,
+    pageSize: 50,
   })
   const [total, setTotal] = useState(0)
   const [salesOrders, setSalesOrders] = useState<any[]>([])

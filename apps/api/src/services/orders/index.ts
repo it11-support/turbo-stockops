@@ -94,7 +94,7 @@ export const orderListService = async (params: OrderListParams) => {
   const {
     master = false,
     search = "",
-    perPage = 20,
+    perPage = 50, // default
     page = 1,
     due_date = "",
     sortBy,
