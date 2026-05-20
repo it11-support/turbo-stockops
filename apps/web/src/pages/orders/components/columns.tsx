@@ -5,7 +5,7 @@ import { DataTableColumnHeader } from './headers'
 import LongText from '@/components/long-text'
 import { SalesOrderItem } from '@/types'
 import { useSalesOrder } from '../context/sales-orders-context'
-import { format, formatDate } from 'date-fns'
+import { format, formatDate, parse } from 'date-fns'
 import { id } from 'date-fns/locale'
 
 export const columns: ColumnDef<SalesOrderItem>[] = [
@@ -80,9 +80,13 @@ export const columns: ColumnDef<SalesOrderItem>[] = [
       <DataTableColumnHeader column={column} title='Create Date' />
     ),
     cell: ({ row }) => {
-      const date = row.getValue('created_at') as unknown as Date
+      const date = row.getValue('created_at') as unknown as string
       const formattedDate = date
-        ? format(date, 'yyyy-MM-dd HH:mm', { locale: id })
+        ? format(
+            parse(date, 'yyyy-MM-dd HH:mm:ss', new Date()),
+            'yyyy-MM-dd HH:mm',
+            { locale: id }
+          )
         : ''
       return <LongText className='max-w-36'>{formattedDate}</LongText>
     },
@@ -103,7 +107,11 @@ export const columns: ColumnDef<SalesOrderItem>[] = [
     ),
     cell: ({ row }) => {
       const { DocDueDate } = row.original
-      return <LongText className='max-w-36'>{formatDate(DocDueDate, 'yyyy-MM-dd')}</LongText>
+      return (
+        <LongText className='max-w-36'>
+          {formatDate(DocDueDate, 'yyyy-MM-dd')}
+        </LongText>
+      )
     },
     enableSorting: true,
     meta: { className: 'w-36' },
