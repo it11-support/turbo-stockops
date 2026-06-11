@@ -245,8 +245,8 @@ importers:
         specifier: ^3.8.4
         version: 3.8.4(jspdf@2.5.2)
       laravel-echo:
-        specifier: ^2.2.0
-        version: 2.3.0(pusher-js@8.4.0)(socket.io-client@4.8.3)
+        specifier: ^2.3.7
+        version: 2.3.7(pusher-js@8.4.0)(socket.io-client@4.8.3)
       lucide-react:
         specifier: ^0.453.0
         version: 0.453.0(react@18.3.1)
@@ -3218,12 +3218,17 @@ packages:
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
-  laravel-echo@2.3.0:
-    resolution: {integrity: sha512-wgHPnnBvfHmu2I58xJ4asZH37Nu6P0472ku6zuoGRLc3zEWwIbpovDLYTiOshDH1SM7rA6AjZTKuu+jYoM1tpQ==}
+  laravel-echo@2.3.7:
+    resolution: {integrity: sha512-6NoPtOk16PuaykVgcV1MV5665VPtrbyvacBD6AJ8NJdRjTwrOwKrgOYHgq4bz5E1zUbbVi2UJfMN7P7D/yceyQ==}
     engines: {node: '>=20'}
     peerDependencies:
       pusher-js: '*'
       socket.io-client: '*'
+    peerDependenciesMeta:
+      pusher-js:
+        optional: true
+      socket.io-client:
+        optional: true
 
   leac@0.6.0:
     resolution: {integrity: sha512-y+SqErxb8h7nE/fiEX07jsbuhrpO9lL8eca7/Y1nuWV2moNlXhyd59iDGcRf6moVyDMbmTNzL40SUyrFU/yDpg==}
@@ -7418,8 +7423,8 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
-  laravel-echo@2.3.0(pusher-js@8.4.0)(socket.io-client@4.8.3):
-    dependencies:
+  laravel-echo@2.3.7(pusher-js@8.4.0)(socket.io-client@4.8.3):
+    optionalDependencies:
       pusher-js: 8.4.0
       socket.io-client: 4.8.3
 
