@@ -35,7 +35,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "prisma": "^7.3.0",
+    "prisma": "^7.8.0",
     "prisma-extension-pagination": "^0.7.6",
     "qs": "^6.15.2",
     "tsc-alias": "^1.8.16",
