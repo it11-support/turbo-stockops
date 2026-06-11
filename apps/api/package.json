@@ -38,7 +38,7 @@
     "prisma": "^7.3.0",
     "prisma-extension-pagination": "^0.7.6",
     "qs": "^6.14.1",
-    "tsc-alias": "^1.8.16",
+    "tsc-alias": "^1.8.17",
     "tsx": "^4.21.0"
   }
 }
