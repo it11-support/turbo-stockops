@@ -67,7 +67,7 @@ importers:
         specifier: ^6.15.2
         version: 6.15.2
       tsc-alias:
-        specifier: ^1.8.17
+        specifier: ^1.8.16
         version: 1.8.17
       tsx:
         specifier: ^4.21.0
