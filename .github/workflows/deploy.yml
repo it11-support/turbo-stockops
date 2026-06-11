@@ -66,6 +66,8 @@ jobs:
             # Backend prisma generate & build
             pnpm --filter ./apps/api db:generate
            
+            pnpm dlx update-browserslist-db latest
+            
             pnpm turbo run build
 
             # PM2 backend
