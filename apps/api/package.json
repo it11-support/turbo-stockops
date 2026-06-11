@@ -16,7 +16,7 @@
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.0.10",
-    "@types/qs": "^6.14.0",
+    "@types/qs": "^6.15.1",
     "@typescript-eslint/eslint-plugin": "8",
     "@typescript-eslint/parser": "8",
     "eslint": "9",
@@ -37,7 +37,7 @@
     "jsonwebtoken": "^9.0.3",
     "prisma": "^7.3.0",
     "prisma-extension-pagination": "^0.7.6",
-    "qs": "^6.14.1",
+    "qs": "^6.15.2",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.21.0"
   }
