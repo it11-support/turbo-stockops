@@ -16,8 +16,8 @@ importers:
         version: 14.2.5
     devDependencies:
       prettier:
-        specifier: ^3.7.4
-        version: 3.7.4
+        specifier: ^3.8.4
+        version: 3.8.4
       turbo:
         specifier: ^2.7.5
         version: 2.7.5
@@ -324,11 +324,11 @@ importers:
         specifier: ^8.4.38
         version: 8.5.6
       prettier:
-        specifier: ^3.2.5
-        version: 3.7.4
+        specifier: ^3.8.4
+        version: 3.8.4
       prettier-plugin-tailwindcss:
         specifier: ^0.8.0
-        version: 0.8.0(prettier@3.7.4)
+        version: 0.8.0(prettier@3.8.4)
       tailwindcss:
         specifier: ^3.4.3
         version: 3.4.19(tsx@4.21.0)
@@ -3773,9 +3773,10 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  prettier@3.7.4:
-    resolution: {integrity: sha512-v6UNi1+3hSlVvv8fSaoUbggEM5VErKmmpGA7Pl3HF8V6uKY7rvClBOJlH6yNwQtfTueNkGVpOv/mtWL9L4bgRA==}
+  prettier@3.8.4:
+    resolution: {integrity: sha512-N2MylSdi48+5N/6S5j+maeHbUSIzzZ5uOcX5Hm4QpV8Dkb1HFjfAKTKX6yNPJQD9AhcT3ifHNB66tWTTJDi11Q==}
     engines: {node: '>=14'}
+    hasBin: true
 
   prisma-extension-pagination@0.7.6:
     resolution: {integrity: sha512-FeJwUHCHhRW51y8qys8GEOYWqElJvyxgKJP7+pBOrkUqttlBOdsA5cjtoclLmLAVOpm7vYsi2lFdBm5WB/s43w==}
@@ -8010,13 +8011,13 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-tailwindcss@0.8.0(prettier@3.7.4):
+  prettier-plugin-tailwindcss@0.8.0(prettier@3.8.4):
     dependencies:
-      prettier: 3.7.4
+      prettier: 3.8.4
 
   prettier@3.4.2: {}
 
-  prettier@3.7.4: {}
+  prettier@3.8.4: {}
 
   prisma-extension-pagination@0.7.6(@prisma/client@7.8.0(prisma@7.8.0(@types/react-dom@18.3.7(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)):
     dependencies:
