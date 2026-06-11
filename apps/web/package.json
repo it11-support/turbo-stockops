@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "tsc" : "tsc",
+    "tsc": "tsc",
     "build": "tsc && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -47,7 +47,7 @@
     "@react-email/components": "^0.0.32",
     "@tabler/icons-react": "^3.2.0",
     "@tanstack/react-table": "^8.16.0",
-    "@types/xlsx": "^0.0.36",
+    "@turbo-stockops/types": "workspace:*",
     "axios": "^1.17.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
@@ -73,10 +73,9 @@
     "socket.io-client": "^4.8.1",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
-    "xlsx": "^0.18.5",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
     "zod": "^3.22.4",
-    "zustand": "^5.0.6",
-    "@turbo-stockops/types": "workspace:*"
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
