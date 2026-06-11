@@ -61,118 +61,144 @@ export const getPickListService = async () => {
 };
 
 export const storePickListService = async (params: PickListParams) => {
-  try {
-    const {
-      selectedIds,
-      pickList: pickListId,
-      picker,
-      notes,
-      area,
-      TrnspCode,
-    } = params;
-
-    if (
-      !selectedIds ||
-      !Array.isArray(selectedIds) ||
-      selectedIds.length === 0
-    ) {
-      throw new Error("No items selected for the pick list.");
-    }
-
-    let selectedArea = "";
-    if (TrnspCode) {
-      const areas = await areaListService();
-      selectedArea = areas.find(
-        (area: { TrnspCode: number; TrnspName: string }) =>
-          area.TrnspCode === TrnspCode,
-      ).TrnspName;
-    } else if (area) {
-      selectedArea = area;
-    }
-
-    const orders = await prisma.orders.findMany({
-      where: {
-        DocNum: { in: selectedIds.map(Number) },
-        OR: [
-          { pick_list_details: { none: {} } },
-          {
-            pick_list_details: {
-              some: { open_qty: { gt: 0 } },
+  const { selectedIds, pickList: pickListId, picker, notes, area, TrnspCode } = params;
+ 
+  if (!selectedIds || !Array.isArray(selectedIds) || selectedIds.length === 0) {
+    throw new Error("No items selected for the pick list.");
+  }
+ 
+  // Resolve area name
+  let selectedArea = "";
+  if (TrnspCode) {
+    const areas = await areaListService();
+    selectedArea = areas.find(
+      (a: { TrnspCode: number; TrnspName: string }) => a.TrnspCode === TrnspCode
+    )?.TrnspName ?? "";
+  } else if (area) {
+    selectedArea = area;
+  }
+ 
+  // Ambil semua order rows untuk DocNum yang dipilih
+  // (satu DocNum bisa punya banyak LineNum)
+  const orders = await prisma.orders.findMany({
+    where: {
+      DocNum: { in: selectedIds.map(Number) },
+      OR: [
+        { pick_list_details: { none: {} } },
+        { pick_list_details: { some: { open_qty: { gt: 0 } } } },
+      ],
+    },
+  });
+ 
+  if (!orders.length) {
+    return { status: "error", message: "No orders found for the selected items.", data: [] };
+  }
+ 
+  // -------------------------------------------------------------------------
+  // Kunci utama: cari pick_list yang sudah ada untuk DocNum-DocNum ini
+  //
+  // Aturan: satu DocNum = satu pick_list (selama masih open/picking)
+  // Jika sudah ada pick_list open/picking yang mengandung salah satu DocNum
+  // yang dipilih → gunakan pick_list itu, jangan buat baru.
+  // -------------------------------------------------------------------------
+  const docNums = [...new Set(orders.map((o) => o.DocNum).filter(Boolean))] as number[];
+ 
+  const existingPickList = pickListId
+    ? await prisma.pick_lists.findUnique({ where: { id: pickListId } })
+    : await prisma.pick_lists.findFirst({
+        where: {
+          status: { in: ["open", "picking"] },
+          pick_list_details: {
+            some: {
+              order: { DocNum: { in: docNums } },
             },
           },
-        ],
-      },
-    });
-
-    if (!orders.length) {
-      return {
-        status: "error",
-        message: "No orders found for the selected items.",
-        data: [],
-      };
+        },
+        orderBy: { id: "desc" },
+      });
+ 
+  let pickList: any = null;
+ 
+  await prisma.$transaction(async (tx) => {
+    // Gunakan pick_list yang ditemukan, atau buat baru
+    if (existingPickList) {
+      pickList = existingPickList;
+      console.log(`[storePickList] Reusing pick_list ${pickList.id} (${pickList.code})`);
+    } else {
+      pickList = await tx.pick_lists.create({
+        data: {
+          user_id: Number(picker),
+          code: await generateCode(),
+          notes: notes || null,
+          area: selectedArea,
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+      });
+      console.log(`[storePickList] Created new pick_list ${pickList.id} (${pickList.code})`);
     }
-
-    let pickList: any = null;
-
-    await prisma.$transaction(async (tx) => {
-      // Ambil atau buat pick list
-      if (pickListId) {
-        pickList = await tx.pick_lists.findUnique({
-          where: { id: pickListId },
-        });
-      }
-
-      if (!pickList) {
-        pickList = await tx.pick_lists.create({
-          data: {
-            user_id: Number(picker) ?? null,
-            code: await generateCode(),
-            notes: notes || null,
-            area: selectedArea,
-            created_at: new Date(),
-            updated_at: new Date(),
-          },
-        });
-      }
-
-      // Loop orders
-      for (const order of orders) {
-        const existingDetail = await tx.pick_list_details.findFirst({
-          where: { order_id: order.id },
-          include: { pick_lists: true },
-          orderBy: { id: "desc" },
-        });
-
-        if (existingDetail?.pick_lists?.status === "open") {
+ 
+    // Proses tiap order row
+    for (const order of orders) {
+      const existingDetail = await tx.pick_list_details.findFirst({
+        where: { order_id: order.id },
+        include: { pick_lists: true },
+        orderBy: { id: "desc" },
+      });
+ 
+      if (existingDetail) {
+        const plStatus = existingDetail.pick_lists?.status;
+ 
+        if (plStatus === "open" || plStatus === "picking") {
+          // Detail sudah ada di pick_list aktif → update demand saja
+          // (demand bisa berubah kalau SAP update qty)
           await tx.pick_list_details.update({
             where: { id: existingDetail.id },
-            data: { demand: order.Quantity || 0 },
+            data: {
+              demand: order.Quantity || 0,
+              updated_at: new Date(),
+            },
           });
+          console.log(
+            `[storePickList] Updated demand for order ${order.id} ` +
+            `(DocNum ${order.DocNum} Line ${order.LineNum})`
+          );
           continue;
         }
-
-        await tx.pick_list_details.create({
-          data: {
-            pick_list_id: pickList.id,
-            order_id: order.id,
-            item_code: String(order.ItemCode),
-            item_name: String(order.Dscription),
-            buy_unit_msr: order.BuyUnitMsr,
-            num_in_buy: Number(order.NumInBuy) || 0,
-            sal_unit_msr: order.SalUnitMsr,
-            num_in_sale: Number(order.NumInSale) || 0,
-            demand: order.Quantity || 0,
-            picked: existingDetail?.picked || 0,
-            unit: order.unitMsr || order.unitMsr || null,
-            rack_no: order.SuppCatNum || null,
-          },
-        });
+ 
+        if (plStatus === "picked") {
+          // Sudah selesai di-pick → skip, jangan sentuh
+          continue;
+        }
       }
-    });
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+ 
+      // Belum ada detail → buat baru di pick_list yang aktif/baru
+      await tx.pick_list_details.create({
+        data: {
+          pick_list_id: pickList.id,
+          order_id: order.id,
+          item_code: String(order.ItemCode),
+          item_name: String(order.Dscription ?? order.ItemCode),
+          buy_unit_msr: order.BuyUnitMsr ?? null,
+          num_in_buy: Number(order.NumInBuy) || 0,
+          sal_unit_msr: order.SalUnitMsr ?? null,
+          num_in_sale: Number(order.NumInSale) || 0,
+          demand: order.Quantity || 0,
+          picked: 0,
+          unit: order.unitMsr ?? null,
+          rack_no: order.SuppCatNum ?? null,
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+      });
+      console.log(
+        `[storePickList] Added order ${order.id} ` +
+        `(DocNum ${order.DocNum} Line ${order.LineNum}) to pick_list ${pickList.id}`
+      );
+    }
+  });
+ 
+  return { status: "ok", data: pickList };
 };
 
 export const getPickListsService = async (params: PickListQueryParams) => {
