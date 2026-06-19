@@ -20,7 +20,7 @@ export default function AutoRefresh({ onRefresh }: AutoRefreshProps) {
   const [refreshInterval, setRefreshInterval] = useState(60000)
 
   useEffect(() => {
-    let intervalId: NodeJS.Timeout | null = null
+    let intervalId: ReturnType<typeof setInterval> | null = null
     if (isAutoRefreshEnabled) {
       intervalId = setInterval(onRefresh, refreshInterval)
     }
