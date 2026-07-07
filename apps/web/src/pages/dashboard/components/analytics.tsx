@@ -466,7 +466,6 @@ export function Charts() {
                   fill='var(--color-steps)'
                   radius={2}
                   fillOpacity={0.2}
-                  activeIndex={6}
                   activeBar={<Rectangle fillOpacity={0.8} />}
                 />
                 <XAxis
@@ -742,7 +741,6 @@ export function Charts() {
                   fill='var(--color-calories)'
                   radius={2}
                   fillOpacity={0.2}
-                  activeIndex={6}
                   activeBar={<Rectangle fillOpacity={0.8} />}
                 />
                 <XAxis
