@@ -147,7 +147,7 @@ export function SalesOrderPrimaryButtons() {
                       setOpenPicker(false)
                     }
                   }}
-                  initialFocus
+                  autoFocus
                 />
               </PopoverContent>
             </Popover>
