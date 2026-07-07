@@ -137,7 +137,7 @@ export function AccountForm() {
                     disabled={(date: Date) =>
                       date > new Date() || date < new Date('1900-01-01')
                     }
-                    initialFocus
+                    autoFocus
                   />
                 </PopoverContent>
               </Popover>

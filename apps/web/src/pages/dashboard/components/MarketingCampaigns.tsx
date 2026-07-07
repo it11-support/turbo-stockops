@@ -157,7 +157,7 @@ export default function MarketingCampaigns() {
               mode='single'
               selected={selectedDate}
               onSelect={setSelectedDate}
-              initialFocus
+              autoFocus
             />
           </PopoverContent>
         </Popover>
@@ -219,7 +219,7 @@ export default function MarketingCampaigns() {
                         date &&
                         setNewCampaign({ ...newCampaign, startDate: date })
                       }
-                      initialFocus
+                      autoFocus
                     />
                   </PopoverContent>
                 </Popover>
@@ -242,7 +242,7 @@ export default function MarketingCampaigns() {
                         date &&
                         setNewCampaign({ ...newCampaign, endDate: date })
                       }
-                      initialFocus
+                      autoFocus
                     />
                   </PopoverContent>
                 </Popover>
