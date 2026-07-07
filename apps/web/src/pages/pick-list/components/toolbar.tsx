@@ -79,7 +79,7 @@ export function DataTableToolbar<TData>({
                 mode='single'
                 selected={date ? new Date(date) : undefined}
                 onSelect={(date) => date && setDate(date)}
-                initialFocus
+                autoFocus
               />
             </PopoverContent>
           </Popover>
