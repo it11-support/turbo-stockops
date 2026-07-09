@@ -56,7 +56,7 @@
     "dayjs": "^1.11.10",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.2.1",
-    "jspdf-autotable": "^3.8.4",
+    "jspdf-autotable": "^5.0.8",
     "laravel-echo": "^2.3.7",
     "lucide-react": "^0.453.0",
     "pusher-js": "^8.5.0",
