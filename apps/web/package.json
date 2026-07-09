@@ -17,7 +17,7 @@
     "@fullcalendar/interaction": "^6.1.15",
     "@fullcalendar/list": "^6.1.15",
     "@fullcalendar/react": "^6.1.15",
-    "@fullcalendar/rrule": "^6.1.15",
+    "@fullcalendar/rrule": "^6.1.21",
     "@fullcalendar/timegrid": "^6.1.15",
     "@google/generative-ai": "^0.24.1",
     "@hello-pangea/dnd": "^18.0.1",
