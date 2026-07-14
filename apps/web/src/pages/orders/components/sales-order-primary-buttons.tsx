@@ -107,27 +107,24 @@ export function SalesOrderPrimaryButtons() {
                 Export sales order to excel file
               </DialogDescription>
             </DialogHeader>
-            <Popover open={openPicker} onOpenChange={setOpenPicker}>
+
+            <Popover open={openPicker} onOpenChange={setOpenPicker} modal>
               <PopoverTrigger asChild>
                 <Button
-                  variant={'outline'}
+                  variant='outline'
                   className={cn(
-                    'h-8 w-full justify-between text-left font-normal lg:w-[250px]',
+                    'w-full justify-between',
                     !exportDate && 'text-muted-foreground'
                   )}
                 >
-                  <div className='flex items-center'>
+                  <span className='flex items-center'>
                     <CalendarIcon className='mr-2 h-4 w-4' />
-                    {exportDate ? (
-                      format(new Date(exportDate), 'PPP')
-                    ) : (
-                      <span>Pick a date</span>
-                    )}
-                  </div>
+                    {exportDate ? format(exportDate, 'PPP') : 'Pick a date'}
+                  </span>
 
                   {exportDate && (
                     <XIcon
-                      className='mx-2 h-4 w-4 text-muted-foreground hover:text-red-500'
+                      className='h-4 w-4'
                       onClick={(e) => {
                         e.stopPropagation()
                         setExportDate(undefined)
@@ -137,25 +134,25 @@ export function SalesOrderPrimaryButtons() {
                 </Button>
               </PopoverTrigger>
 
-              <PopoverContent className='w-auto p-0'>
+              <PopoverContent className='w-auto p-0' align='start'>
                 <Calendar
                   mode='single'
-                  selected={exportDate ? new Date(exportDate) : undefined}
+                  selected={exportDate}
                   onSelect={(date) => {
-                    if (date) {
-                      setExportDate(date)
-                      setOpenPicker(false)
-                    }
-                  }}
-                  autoFocus
+                    if (!date) return
+
+                    setExportDate(date)
+                    setOpenPicker(false)
+                  }}                  
                 />
               </PopoverContent>
             </Popover>
+
             {exportDate &&
               (isLoadingExport ? (
                 <p className='mt-2 flex items-center gap-2 text-sm text-muted-foreground'>
                   Loading data
-                  <Loader2 className='h-3.5 w-3.5 animate-spin' />
+                  <Loader2 className='h-4 w-4 animate-spin' />
                 </p>
               ) : exportData.length > 0 ? (
                 <p className='mt-2 text-sm text-muted-foreground'>
@@ -167,20 +164,17 @@ export function SalesOrderPrimaryButtons() {
                 </p>
               ))}
 
-            <DialogFooter className='flex justify-end gap-2'>
+            <DialogFooter>
               <Button variant='outline' onClick={() => setOpenModal(false)}>
                 Cancel
               </Button>
-              {exportData.length > 0 ? (
-                <Button
-                  onClick={handleExportData}
-                  variant='outline'
-                  className='bg-success text-white'
-                >
+
+              {exportData.length > 0 && (
+                <Button onClick={handleExportData}>
                   Export
-                  <IconFileExcel className='ml-2 h-3.5 w-3.5' />
+                  <IconFileExcel className='ml-2 h-4 w-4' />
                 </Button>
-              ) : null}
+              )}
             </DialogFooter>
           </DialogContent>
         </Dialog>

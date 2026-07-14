@@ -462,8 +462,7 @@ export default function SalesOrderProvider({ children }: Props) {
         headers: { 'Content-Type': 'application/json' },
       })
 
-      console.log(res)
-      if (res.status !== 200 || res.data?.status !== 'ok') {
+      if (res.status !== 200 || res.data?.data?.status !== 'ok') {
         throw new Error(res.data?.message || 'Gagal membuat pick list')
       }
     } catch (error: any) {
