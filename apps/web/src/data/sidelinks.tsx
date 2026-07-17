@@ -6,12 +6,13 @@ import {
   IconShoppingCart,
 } from '@tabler/icons-react'
 import { User2Icon } from 'lucide-react'
+import React from 'react'
 
 export interface NavLink {
   title: string
   label?: string
   href: string
-  icon: JSX.Element
+  icon: React.JSX.Element
   hidden?: boolean
 }
 

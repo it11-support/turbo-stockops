@@ -12,16 +12,19 @@ const BreadcrumbContext = React.createContext<boolean>(false)
 
 const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(
   ({ className, children, separator, ...props }, ref) => {
-    const validChildren = getValidChildren(children)
+    const validChildren = getValidChildren(children) as React.ReactElement<BreadcrumbItemProps>[]
 
     const count = validChildren.length
 
-    const clones = validChildren.map((child, index) =>
-      React.cloneElement(child, {
+    const clones = validChildren.map((child, index) => {
+      const elementChild = child as React.ReactElement<BreadcrumbItemProps>
+      return React.createElement(BreadcrumbItem, {
+        key: elementChild.key,
+        ...elementChild.props,
         separator,
         isLastChild: count === index + 1,
-      })
-    )
+      } as unknown as BreadcrumbItemProps)
+    })
 
     return (
       <BreadcrumbContext.Provider value={true}>
@@ -34,20 +37,14 @@ const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(
 )
 Breadcrumb.displayName = 'Breadcrumb'
 
-interface InternalBreadcrumbItemProps {
+interface BreadcrumbItemProps
+  extends React.ComponentPropsWithoutRef<'li'> {
   separator?: React.ReactNode
   isLastChild: boolean
 }
 
-interface BreadcrumbItemProps extends Omit<
-  React.ComponentPropsWithoutRef<'li'>,
-  keyof InternalBreadcrumbItemProps
-> {}
-
 const BreadcrumbItem = React.forwardRef<HTMLLIElement, BreadcrumbItemProps>(
-  ({ className, children, ...props }, ref) => {
-    const { separator, isLastChild, ...rest } =
-      props as InternalBreadcrumbItemProps
+  ({ className, children, separator, isLastChild, ...rest }, ref) => {
 
     // Check if BreadcrumbItem is used within Breadcrumb
     const isInsideBreadcrumb = React.useContext(BreadcrumbContext)
@@ -79,6 +76,6 @@ const getValidChildren = (children: React.ReactNode) =>
     throw new Error(
       `${Breadcrumb.displayName} can only have ${BreadcrumbItem.displayName} as children.`
     )
-  }) as React.ReactElement[]
+  }) as React.ReactElement<BreadcrumbItemProps>[]
 
 export { Breadcrumb, BreadcrumbItem }
