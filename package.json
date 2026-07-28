@@ -10,9 +10,9 @@
   },
   "devDependencies": {
     "prettier": "^3.9.6",
+    "react-router": "^8.3.0",
     "turbo": "^2.10.2",
-    "typescript": "6.0.3",
-    "react-router": ">=8.3.0"
+    "typescript": "6.0.3"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {

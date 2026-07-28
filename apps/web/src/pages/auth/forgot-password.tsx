@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card'
 import { ForgotForm } from './components/forgot-form'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 export default function ForgotPassword() {
   return (

@@ -7,7 +7,7 @@ import { PickListItem } from '@/types'
 import { Badge } from '@/components/ui/badge'
 import { format } from 'date-fns'
 import { DataTableRowActions } from './actions'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { ExternalLinkIcon } from 'lucide-react'
 import { id } from 'date-fns/locale'
 

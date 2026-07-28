@@ -14,7 +14,7 @@ import {
   RefreshCw,
   X,
 } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { importExcel } from '@/lib/exportExcel'
 import { Product } from '../data/schema'
 import { useState } from 'react'

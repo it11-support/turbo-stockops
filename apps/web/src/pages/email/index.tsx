@@ -1,7 +1,7 @@
 import { Layout } from '@/components/custom/layout'
 import ThemeSwitch from '@/components/theme-switch'
 import { UserNav } from '@/components/user-nav'
-import { Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router'
 
 export default function EmailMarketing() {
   return (
