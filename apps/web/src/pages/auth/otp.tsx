@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { OtpForm } from './components/otp-form'
 
 export default function Otp() {

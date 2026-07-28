@@ -3,7 +3,7 @@ import { usePickList } from '../../context/pick-list-context'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/custom/button'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { SalesOrderItem } from '@/types'
 
 export default function ProcessPicking() {
@@ -110,7 +110,7 @@ export default function ProcessPicking() {
   }
 
   return (
-    <div className='flex max-h-[60vh] flex-col  text-xs'>
+    <div className='flex max-h-[60vh] flex-col text-xs'>
       <div className='flex-1 overflow-auto scroll-smooth bg-background'>
         {currentItem && step < summarizedItems.length && (
           <Card

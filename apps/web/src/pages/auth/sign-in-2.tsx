@@ -2,7 +2,7 @@ import { Card } from '@/components/ui/card'
 import { UserAuthForm } from './components/user-auth-form'
 import { useAuthStore } from '@/stores/authStore'
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 export default function SignIn2() {
   const token = useAuthStore((state) => state.user?.token)
