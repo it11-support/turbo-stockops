@@ -27,6 +27,18 @@ export const secureRandomDate = (start: Date, end: Date): string => {
   } while (random >= threshold)
   return new Date(start.getTime() + (random % range)).toISOString()
 }
+export const secureRandomFloat = (
+  min: number,
+  max: number,
+  decimals = 2,
+): number => {
+  const factor = 10 ** decimals
+
+  return secureRandomInt(
+    Math.round(min * factor),
+    Math.round(max * factor),
+  ) / factor
+}
 
 export const secureUUID = (): string => {
   const bytes = crypto.getRandomValues(new Uint8Array(16))

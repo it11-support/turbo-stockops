@@ -1,6 +1,6 @@
-import { secureRandomElement, secureRandomInt } from '@/lib/secure-random.js'
+import { secureRandomElement, secureRandomFloat, secureRandomInt } from '@/lib/secure-random.js'
 
-function generateRandomProducts(count: any) {
+function generateRandomProducts(count: number) {
   const categories = ['Tops', 'Bottoms', 'Shoes', 'Accessories'] as const
   const brands = ['ComfortWear', 'StylePro', 'ActiveFit', 'UrbanTrend'] as const
   const colors = ['White', 'Black', 'Blue', 'Red', 'Green'] as const
@@ -34,12 +34,8 @@ function generateRandomProducts(count: any) {
       size,
       colors: colors.map((color) => ({
         color,
-        price: parseFloat(
-          (secureRandomInt(15, 30) + secureRandomInt(0, 99) / 100).toFixed(2)
-        ),
-        originalPrice: parseFloat(
-          (secureRandomInt(25, 50) + secureRandomInt(0, 99) / 100).toFixed(2)
-        ),
+        price: secureRandomFloat(15, 30, 2),
+        originalPrice: secureRandomFloat(20, 50, 2),
         stockStatus: ['In Stock', 'Out of Stock', 'Low Stock'][
           secureRandomInt(0, 2)
         ],
