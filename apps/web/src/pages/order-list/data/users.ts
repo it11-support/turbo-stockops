@@ -1,3 +1,5 @@
+import { secureRandomElement, secureRandomInt, secureRandomDate, secureUUID } from '@/lib/secure-random.js'
+
 type User = {
   id: string
   name: string
@@ -6,24 +8,6 @@ type User = {
   role: 'superadmin' | 'admin' | 'picker'
   createdAt: string
   updatedAt: string
-}
-
-const generateUUID = (): string => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0
-    const v = c === 'x' ? r : (r & 0x3) | 0x8
-    return v.toString(16)
-  })
-}
-
-const getRandomElement = <T>(arr: T[]): T =>
-  arr[Math.floor(Math.random() * arr.length)]
-
-const generateRandomDate = (start: Date, end: Date): string => {
-  const date = new Date(
-    start.getTime() + Math.random() * (end.getTime() - start.getTime())
-  )
-  return date.toISOString()
 }
 
 const names = [
@@ -41,17 +25,17 @@ const names = [
 const roles: User['role'][] = ['superadmin', 'admin', 'picker']
 
 export const users: User[] = Array.from({ length: 20 }, (): User => {
-  const lastName = getRandomElement(names)
-  const username = `${lastName.toLowerCase()}.${lastName.toLowerCase()}${Math.floor(Math.random() * 100)}`
+  const lastName = secureRandomElement(names)
+  const username = `${lastName.toLowerCase()}.${lastName.toLowerCase()}${secureRandomInt(0, 99)}`
   const email = `${lastName.toLowerCase()}.${lastName.toLowerCase()}@example.com`
 
   return {
-    id: generateUUID(),
+    id: secureUUID(),
     name: lastName,
     username,
     email,
-    role: getRandomElement(roles),
-    createdAt: generateRandomDate(new Date(2020, 0, 1), new Date()),
-    updatedAt: generateRandomDate(new Date(2023, 0, 1), new Date()),
+    role: secureRandomElement(roles),
+    createdAt: secureRandomDate(new Date(2020, 0, 1), new Date()),
+    updatedAt: secureRandomDate(new Date(2023, 0, 1), new Date()),
   }
 })

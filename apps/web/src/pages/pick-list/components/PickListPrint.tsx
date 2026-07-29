@@ -192,7 +192,7 @@ export default function PrintView() {
                     </p>
                     <p className='text-lg font-semibold'>{order.address}</p>
                     <p className='text-lg font-semibold'>
-                      Telp: {order.phone?.replace("'", '') ?? '-'}
+                      Telp: {order.phone?.replace(/'/g, '') ?? '-'}
                     </p>
                   </div>
 

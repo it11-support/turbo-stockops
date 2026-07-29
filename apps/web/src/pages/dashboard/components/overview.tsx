@@ -1,53 +1,54 @@
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import { secureRandomInt } from '@/lib/secure-random.js'
 
 const data = [
   {
     name: 'Jan',
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: secureRandomInt(1000, 6000),
   },
   {
     name: 'Feb',
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: secureRandomInt(1000, 6000),
   },
   {
     name: 'Mar',
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: secureRandomInt(1000, 6000),
   },
   {
     name: 'Apr',
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: secureRandomInt(1000, 6000),
   },
   {
     name: 'May',
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: secureRandomInt(1000, 6000),
   },
   {
     name: 'Jun',
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: secureRandomInt(1000, 6000),
   },
   {
     name: 'Jul',
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: secureRandomInt(1000, 6000),
   },
   {
     name: 'Aug',
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: secureRandomInt(1000, 6000),
   },
   {
     name: 'Sep',
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: secureRandomInt(1000, 6000),
   },
   {
     name: 'Oct',
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: secureRandomInt(1000, 6000),
   },
   {
     name: 'Nov',
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: secureRandomInt(1000, 6000),
   },
   {
     name: 'Dec',
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: secureRandomInt(1000, 6000),
   },
 ]
 

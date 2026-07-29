@@ -27,6 +27,7 @@ import AutoRefresh from './AutoRefresh'
 import AddColumnDialog from './AddColumnDialog'
 import ExportDataDialog from './ExportDataDialog'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import { secureRandomInt } from '@/lib/secure-random.js'
 
 export default function EnhancedVulnerabilityKanban() {
   const [columns, setColumns] = useState(initialData)
@@ -73,7 +74,7 @@ export default function EnhancedVulnerabilityKanban() {
         updatedColumns[columnId].items = updatedColumns[columnId].items.map(
           (item) => ({
             ...item,
-            score: Math.floor(Math.random() * 100),
+            score: secureRandomInt(0, 100),
           })
         )
       })

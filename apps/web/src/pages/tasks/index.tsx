@@ -7,6 +7,7 @@ import { DataTable } from './components/data-table'
 import { columns } from './components/columns'
 import { tasks as initialTasks } from './data/tasks'
 import { Task } from './data/schema'
+import { secureRandomInt } from '@/lib/secure-random.js'
 
 export default function Tasks() {
   const [tasksData, setTasksData] = useState<Task[]>(initialTasks)
@@ -36,7 +37,7 @@ export default function Tasks() {
     if (taskToCopy) {
       const newTask = {
         ...taskToCopy,
-        id: `TASK-${Math.floor(Math.random() * 10000)}`,
+        id: `TASK-${secureRandomInt(0, 9999)}`,
         title: `Copy of ${taskToCopy.title}`,
       }
       setTasksData([...tasksData, newTask])

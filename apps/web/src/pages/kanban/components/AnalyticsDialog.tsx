@@ -7,6 +7,7 @@ import {
 import { ChartContainer } from '@/components/ui/chart'
 import { PolarAngleAxis, RadialBar, RadialBarChart } from 'recharts'
 import { Vulnerability } from '../data/schema'
+import { secureRandomInt } from '@/lib/secure-random.js'
 
 interface AnalyticsDialogProps {
   isOpen: boolean
@@ -86,7 +87,7 @@ export default function AnalyticsDialog({
                 name,
                 {
                   label: name,
-                  color: `hsl(var(--chart-${Math.floor(Math.random() * 4) + 1}))`,
+                  color: `hsl(var(--chart-${secureRandomInt(1, 4)}))`,
                 },
               ])
             )}

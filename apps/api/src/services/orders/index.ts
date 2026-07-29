@@ -161,7 +161,10 @@ export const orderListService = async (params: OrderListParams) => {
     Area: "TrnspName",
     "Item Code": "ItemCode",
   };
-  const sortColumn = sortFieldMap[sortBy ?? ""] ?? sortBy ?? "DocNum";
+  const sortColumn =
+    sortBy && Object.hasOwn(sortFieldMap, sortBy)
+      ? sortFieldMap[sortBy]
+      : "DocNum";
   const sortDir: "asc" | "desc" = sortDesc ? "desc" : "asc";
 
   // =========================
