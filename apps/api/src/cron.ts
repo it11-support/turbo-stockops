@@ -4,6 +4,10 @@ import { syncOrderService } from '@/services/index.js'
 export const initCronJobs = () => {
   cron.schedule('*/5 * * * *', async () => {
     console.log('Running Sync Orders Job...')
-    await syncOrderService()
+    try {
+      await syncOrderService()
+    } catch (error) {
+      console.error('Sync Orders Job failed:', error)
+    }
   })
 }

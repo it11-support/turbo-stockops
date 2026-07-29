@@ -1,3 +1,4 @@
+export { apiLimiter, authLimiter, strictLimiter } from "./rate-limiter.js";
 import { IUser } from "@turbo-stockops/types";
 import { verifyJwt } from "@/utils/jwt/index.js";
 import { NextFunction, Request, Response } from "express";
