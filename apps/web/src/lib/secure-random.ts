@@ -1,8 +1,12 @@
 const getSecureRandomInt = (min: number, max: number): number => {
   const range = max - min + 1
-  const maxSafe = 2147483647
-  const scaled = Math.floor((crypto.getRandomValues(new Uint32Array(1))[0] / (maxSafe + 1)) * range)
-  return min + scaled
+  const maxVal = 2147483647
+  const threshold = maxVal - (maxVal % range)
+  let random: number
+  do {
+    random = crypto.getRandomValues(new Uint32Array(1))[0]
+  } while (random >= threshold)
+  return min + (random % range)
 }
 
 export const secureRandomInt = (min: number, max: number): number => {
@@ -14,11 +18,14 @@ export const secureRandomElement = <T>(arr: readonly T[]): T => {
 }
 
 export const secureRandomDate = (start: Date, end: Date): string => {
-  const timestamp =
-    start.getTime() +
-    (crypto.getRandomValues(new Uint32Array(1))[0] / (2147483647 + 1)) *
-    (end.getTime() - start.getTime())
-  return new Date(timestamp).toISOString()
+  const range = end.getTime() - start.getTime()
+  const maxVal = 2147483647
+  const threshold = maxVal - (maxVal % range)
+  let random: number
+  do {
+    random = crypto.getRandomValues(new Uint32Array(1))[0]
+  } while (random >= threshold)
+  return new Date(start.getTime() + (random % range)).toISOString()
 }
 
 export const secureUUID = (): string => {
