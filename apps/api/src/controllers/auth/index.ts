@@ -1,5 +1,5 @@
 import { loginService } from "@/services/index.js";
-import { apiResponse } from "@/utils/index.js";
+import { apiResponse, errorResponse } from "@/utils/index.js";
 import { Request, Response } from "express";
 
 export const loginController = async (req: Request, res: Response) => {
@@ -19,6 +19,6 @@ export const loginController = async (req: Request, res: Response) => {
     return apiResponse(res, 200, "Login successful", data);
   } catch (error) {
     console.log(error);
-    return res.status(400).json(error);
+    return errorResponse(res, error, 500, "Login failed");
   }
 };

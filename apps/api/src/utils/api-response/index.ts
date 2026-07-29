@@ -12,3 +12,17 @@ export const apiResponse = (
     data,
   });
 };
+
+export const errorResponse = (
+  res: Response,
+  error: unknown,
+  status = 500,
+  message = 'Internal server error',
+) => {
+  console.error(error)
+
+  return res.status(status).json({
+    success: false,
+    message,
+  })
+}

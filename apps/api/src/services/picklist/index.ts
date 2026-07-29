@@ -62,11 +62,11 @@ export const getPickListService = async () => {
 
 export const storePickListService = async (params: PickListParams) => {
   const { selectedIds, pickList: pickListId, picker, notes, area, TrnspCode } = params;
- 
+
   if (!selectedIds || !Array.isArray(selectedIds) || selectedIds.length === 0) {
     throw new Error("No items selected for the pick list.");
   }
- 
+
   // Resolve area name
   let selectedArea = "";
   if (TrnspCode) {
@@ -77,7 +77,7 @@ export const storePickListService = async (params: PickListParams) => {
   } else if (area) {
     selectedArea = area;
   }
- 
+
   // Ambil semua order rows untuk DocNum yang dipilih
   // (satu DocNum bisa punya banyak LineNum)
   const orders = await prisma.orders.findMany({
@@ -89,11 +89,11 @@ export const storePickListService = async (params: PickListParams) => {
       ],
     },
   });
- 
+
   if (!orders.length) {
     return { status: "error", message: "No orders found for the selected items.", data: [] };
   }
- 
+
   // -------------------------------------------------------------------------
   // Kunci utama: cari pick_list yang sudah ada untuk DocNum-DocNum ini
   //
@@ -102,23 +102,23 @@ export const storePickListService = async (params: PickListParams) => {
   // yang dipilih → gunakan pick_list itu, jangan buat baru.
   // -------------------------------------------------------------------------
   const docNums = [...new Set(orders.map((o) => o.DocNum).filter(Boolean))] as number[];
- 
+
   const existingPickList = pickListId
     ? await prisma.pick_lists.findUnique({ where: { id: pickListId } })
     : await prisma.pick_lists.findFirst({
-        where: {
-          status: { in: ["open", "picking"] },
-          pick_list_details: {
-            some: {
-              order: { DocNum: { in: docNums } },
-            },
+      where: {
+        status: { in: ["open", "picking"] },
+        pick_list_details: {
+          some: {
+            order: { DocNum: { in: docNums } },
           },
         },
-        orderBy: { id: "desc" },
-      });
- 
+      },
+      orderBy: { id: "desc" },
+    });
+
   let pickList: any = null;
- 
+
   await prisma.$transaction(async (tx) => {
     // Gunakan pick_list yang ditemukan, atau buat baru
     if (existingPickList) {
@@ -137,7 +137,7 @@ export const storePickListService = async (params: PickListParams) => {
       });
       console.log(`[storePickList] Created new pick_list ${pickList.id} (${pickList.code})`);
     }
- 
+
     // Proses tiap order row
     for (const order of orders) {
       const existingDetail = await tx.pick_list_details.findFirst({
@@ -145,10 +145,10 @@ export const storePickListService = async (params: PickListParams) => {
         include: { pick_lists: true },
         orderBy: { id: "desc" },
       });
- 
+
       if (existingDetail) {
         const plStatus = existingDetail.pick_lists?.status;
- 
+
         if (plStatus === "open" || plStatus === "picking") {
           // Detail sudah ada di pick_list aktif → update demand saja
           // (demand bisa berubah kalau SAP update qty)
@@ -165,13 +165,13 @@ export const storePickListService = async (params: PickListParams) => {
           );
           continue;
         }
- 
+
         if (plStatus === "picked") {
           // Sudah selesai di-pick → skip, jangan sentuh
           continue;
         }
       }
- 
+
       // Belum ada detail → buat baru di pick_list yang aktif/baru
       await tx.pick_list_details.create({
         data: {
@@ -197,7 +197,7 @@ export const storePickListService = async (params: PickListParams) => {
       );
     }
   });
- 
+
   return { status: "ok", data: pickList };
 };
 
@@ -264,9 +264,9 @@ export const getPickListsService = async (params: PickListQueryParams) => {
   const sortDirection: "asc" | "desc" = sortDesc ? "desc" : "asc";
 
   const orderBy =
-    sortBy && sortFieldMap[sortBy]
+    sortBy && Object.hasOwn(sortFieldMap, sortBy)
       ? sortFieldMap[sortBy](sortDirection)
-      : { created_at: "desc" };
+      : { created_at: 'desc' };
 
   // =========================
   // Pagination
@@ -390,10 +390,10 @@ export const getPickListDetailService = async ({
       ...(user.isAdmin
         ? {}
         : {
-            pickList: {
-              user_id: user.id,
-            },
-          }),
+          pickList: {
+            user_id: user.id,
+          },
+        }),
     },
     include: {
       pick_lists: true,
