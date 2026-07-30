@@ -42,7 +42,7 @@ export async function insertToOrderTable(data: any[], returnResponse = false) {
     try {
       const docNum = Number(String(item.DocNum || "").trim());
       const lineNum = Number(item.LineNum);
-      let openQty = item.OpenQty;
+      const openQty = item.OpenQty;
 
       const existingOrder = await prisma.orders.findUnique({
         where: { DocNum_LineNum: { DocNum: docNum, LineNum: lineNum } },

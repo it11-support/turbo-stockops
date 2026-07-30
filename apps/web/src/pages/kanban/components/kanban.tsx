@@ -161,7 +161,7 @@ export default function EnhancedVulnerabilityKanban() {
   const filteredAndSortedColumns = useMemo(() => {
     return Object.entries(columns).reduce(
       (acc, [columnId, column]) => {
-        let filteredItems = column.items.filter(
+        const filteredItems = column.items.filter(
           (item) =>
             item.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
             (filterBy === 'All' || item.severity === filterBy)
