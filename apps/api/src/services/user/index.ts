@@ -47,7 +47,7 @@ export const userListService = async (params: UserListParams) => {
   try {
     const { search, perPage, role, sort, page } = params;
 
-    let where: usersWhereInput = {};
+    const where: usersWhereInput = {};
 
     if (search) {
       where.OR = [
