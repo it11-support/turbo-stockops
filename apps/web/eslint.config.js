@@ -20,7 +20,7 @@ export default [
         ecmaFeatures: {
           jsx: true,
         },
-        project: ["./tsconfig.json"],
+        project: ["./tsconfig.json", "./tsconfig.node.json"],
         tsconfigRootDir: __dirname,
       },
       globals: {
