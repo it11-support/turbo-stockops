@@ -2,81 +2,69 @@ name: Snyk Security
 
 on:
   push:
-    branches: ["main" ]
+    branches:
+      - main
   pull_request:
-    branches: ["main"]
+    branches:
+      - main
 
 permissions:
   contents: read
 
 jobs:
   snyk:
+    runs-on: ubuntu-latest
+
     permissions:
       contents: read
-      security-events: write
       actions: read
-    runs-on: ubuntu-latest
+      security-events: write
+
     steps:
-      - uses: actions/checkout@v7
-      - name: Set up Snyk CLI to check for security issues       
-        uses: snyk/actions/setup@master
+      - name: Checkout
+        uses: actions/checkout@v4
 
-        # For Snyk Open Source you must first set up the development environment for your application's dependencies
-        # For example for Node
-        #- uses: actions/setup-node@v4
-        #  with:
-        #    node-version: 20
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
-        env:
-          # This is where you will need to introduce the Snyk API token created with your Snyk account
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-        # Runs Snyk Code (SAST) analysis and uploads result into GitHub.
-        # Use || true to not fail the pipeline
-      - name: Snyk Code test
-        run: snyk code test --sarif --policy-path=.snyk  > snyk-code.sarif || true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+          cache: pnpm
 
-      - name: Install Node dependencies for all projects
-        run: |
-          set -euo pipefail
-          echo "Installing Node dependencies for any package.json in repo..."
-          # Install at repo root if package.json exists
-          if [ -f package.json ]; then
-            echo "Installing root dependencies..."
-            npm ci --silent || npm install --no-audit --no-fund
-          fi
-          # Find all package.json files (covers apps/web and other packages) and install in each folder
-          git ls-files -- '*package.json' | sed 's#/package.json$##' | sort -u | while read -r pkg; do
-            if [ -z "$pkg" ]; then
-              continue
-            fi
-            echo "Installing dependencies in: $pkg"
-            (cd "$pkg" && npm ci --silent) || (cd "$pkg" && npm install --no-audit --no-fund)
-          done
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-        # Runs Snyk Open Source (SCA) analysis and uploads result to Snyk.
-      - name: Snyk Open Source monitor
-        run: snyk monitor --all-projects
+      - name: Setup Snyk
+        uses: snyk/actions/setup@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-        # Runs Snyk Infrastructure as Code (IaC) analysis and uploads result to Snyk.
-        # Use || true to not fail the pipeline.
-      - name: Snyk IaC test
+      - name: Snyk Code Test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
-          snyk iac test --org=${{ secrets.SNYK_ORG_ID }} -d || true
+          snyk code test \
+            --policy-path=.snyk \
+            --sarif-file-output=snyk-code.sarif || true
 
-        # Push the Snyk Code results into GitHub Code Scanning tab
-      - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v4.37.5
+      - name: Snyk Open Source Monitor
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          snyk monitor --all-projects
+
+      - name: Snyk IaC Test
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          snyk iac test \
+            --org=${{ secrets.SNYK_ORG_ID }} || true
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: snyk-code.sarif
