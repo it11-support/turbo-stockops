@@ -38,6 +38,29 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Node dependencies for all projects
+        run: |
+          set -euo pipefail
+          echo "Installing Node dependencies for any package.json in repo..."
+          # Install at repo root if package.json exists
+          if [ -f package.json ]; then
+            echo "Installing root dependencies..."
+            npm ci --silent || npm install --no-audit --no-fund
+          fi
+          # Find all package.json files (covers apps/web and other packages) and install in each folder
+          git ls-files -- '*package.json' | sed 's#/package.json$##' | sort -u | while read -r pkg; do
+            if [ -z "$pkg" ]; then
+              continue
+            fi
+            echo "Installing dependencies in: $pkg"
+            (cd "$pkg" && npm ci --silent) || (cd "$pkg" && npm install --no-audit --no-fund)
+          done
+
         # Runs Snyk Open Source (SCA) analysis and uploads result to Snyk.
       - name: Snyk Open Source monitor
         run: snyk monitor --all-projects
