@@ -20,7 +20,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "node-cron": "^4.2.1",
+    "node-cron": "^4.6.0",
     "serve": "^14.2.6"
   }
 }
