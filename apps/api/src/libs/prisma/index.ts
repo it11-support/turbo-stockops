@@ -3,7 +3,7 @@ import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { pagination } from "prisma-extension-pagination";
 import { PrismaClient, Prisma } from "@/generated/prisma/client.js";
 
-function convertValue(value: any): any {
+function convertValue(value: unknown): unknown {
   if (typeof value === "bigint") return Number(value);
 
   if (
