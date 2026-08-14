@@ -81,10 +81,14 @@ export function DataTablePagination() {
     try {
       await createPickList()
       setShowConfirmModal(true)
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to create pick list:', error)
+
       const message =
-        error?.message || 'Failed to create pick list, please try again.'
+        error instanceof Error
+          ? error.message
+          : 'Failed to create pick list, please try again.'
+
       setErrorMessage(message)
       setShowErrorModal(true)
     }
@@ -175,13 +179,13 @@ export function DataTablePagination() {
             </DialogDescription>
           </DialogHeader>
           <div className='space-y-4 py-2 pb-4'>
-            <div className='flex items-center gap-2 text-sm '>
+            <div className='flex items-center gap-2 text-sm'>
               <span className='font-medium'>Total Sales Order:</span>
               <span className='inline-block rounded-full bg-gray-900 px-2 py-0.5 text-xs text-gray-200'>
                 {selectedIds.length}
               </span>
             </div>
-            <div className='flex items-center gap-2 text-sm '>
+            <div className='flex items-center gap-2 text-sm'>
               <span className='font-medium'>Total Items:</span>
               <span className='inline-block rounded-full bg-gray-900 px-2 py-0.5 text-xs text-gray-200'>
                 {selectedOrders.length}
@@ -194,7 +198,7 @@ export function DataTablePagination() {
               <div className='h-40 overflow-y-auto rounded border border-gray-700 p-2'>
                 <div className='space-y-2'>
                   {dueDate && (
-                    <div className='flex items-center gap-2 text-sm '>
+                    <div className='flex items-center gap-2 text-sm'>
                       <span className='font-medium'>Due Date:</span>
                       <span className='inline-block rounded-full bg-gray-900 px-2 py-0.5 text-xs text-gray-200'>
                         {format(dueDate, 'yyyy-MM-dd')}
@@ -203,7 +207,7 @@ export function DataTablePagination() {
                   )}
 
                   {salesOrderFilters.length > 0 && (
-                    <div className='flex flex-wrap items-center gap-1 text-sm '>
+                    <div className='flex flex-wrap items-center gap-1 text-sm'>
                       <span className='font-medium'>Sales Order:</span>
                       {salesOrderFilters.map((salesOrderFilter, index) => (
                         <span
@@ -216,7 +220,7 @@ export function DataTablePagination() {
                     </div>
                   )}
                   {areaNames.length > 0 && (
-                    <div className='flex flex-wrap items-center gap-1 text-sm '>
+                    <div className='flex flex-wrap items-center gap-1 text-sm'>
                       <span className='font-medium'>Area:</span>
                       {areaNames.map((areaName, index) => (
                         <span
@@ -229,7 +233,7 @@ export function DataTablePagination() {
                     </div>
                   )}
                   {customerNames.length > 0 && (
-                    <div className='flex flex-wrap items-center gap-1 text-sm '>
+                    <div className='flex flex-wrap items-center gap-1 text-sm'>
                       <span className='font-medium'>Customer:</span>
                       {customerNames.map((customerName, index) => (
                         <span

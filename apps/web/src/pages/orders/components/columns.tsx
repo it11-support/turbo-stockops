@@ -11,42 +11,46 @@ import { id } from 'date-fns/locale'
 export const columns: ColumnDef<SalesOrderItem>[] = [
   {
     id: 'select',
-    header: ({ table }) => {
+    header: () => {
       const { toggleSelectAll, isSelectAll } = useSalesOrder()
+
       return (
         <div className='flex items-center justify-center'>
           <input
             type='checkbox'
             className='h-4 w-4'
-            checked={isSelectAll || table.getIsAllPageRowsSelected()}
-            onChange={(e) => toggleSelectAll(!!e.target.checked)}
+            checked={isSelectAll}
+            onChange={(e) => toggleSelectAll(e.target.checked)}
           />
         </div>
       )
     },
+
     cell: ({ row }) => {
       const { isSelected, setSelectedIds } = useSalesOrder()
-      const id = row.original.DocNum as unknown as string
+
+      const id = String(row.original.DocNum)
+
       return (
         <div className='flex items-center justify-center'>
           <input
             type='checkbox'
             className='h-4 w-4'
-            checked={
-              row.getIsSelected() ||
-              isSelected(row.original.DocNum as unknown as string)
-            }
+            checked={isSelected(id)}
             onChange={(e) => {
               if (e.target.checked) {
-                setSelectedIds((prev) => [...prev, id]) // tambahkan ke array
+                setSelectedIds((prev) =>
+                  prev.includes(id) ? prev : [...prev, id]
+                )
               } else {
-                setSelectedIds((prev) => prev.filter((i) => i !== id)) // hapus dari array
+                setSelectedIds((prev) => prev.filter((item) => item !== id))
               }
             }}
           />
         </div>
       )
     },
+
     meta: {
       className: cn(
         'drop-shadow-[0_1px_2px_rgb(0_0_0_/_0.1)] dark:drop-shadow-[0_1px_2px_rgb(255_255_255_/_0.1)] lg:drop-shadow-none',
@@ -54,9 +58,11 @@ export const columns: ColumnDef<SalesOrderItem>[] = [
         'sticky left-0 md:table-cell'
       ),
     },
+
     enableSorting: false,
     enableHiding: false,
   },
+
   {
     accessorKey: 'DocNum',
     header: ({ column }) => (
