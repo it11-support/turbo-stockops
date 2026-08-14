@@ -4,13 +4,24 @@ import { verifyJwt } from "@/utils/jwt/index.js";
 import { NextFunction, Request, Response } from "express";
 import { JwtPayload } from "jsonwebtoken";
 import prisma from "@/libs/prisma/index.js";
+import { usersGetPayload } from "@/generated/prisma/models.js";
 
 export type IUserPayload = Omit<IUser, "role"> & {
   role: string;
 } & JwtPayload;
 
-export interface AuthRequest extends Request {}
+export type AuthUser = Omit<
+  usersGetPayload<{
+    include: {
+      roles: true
+    }
+  }>, "password" | "remember_token"> & {
+    isAdmin: boolean
+  }
 
+export interface AuthRequest extends Request {
+  user?: AuthUser
+}
 export interface JwtUserPayload {
   sub: bigint;
   email: string;
@@ -35,6 +46,10 @@ export const authMiddleware = async (
     const user = await prisma.users.findUnique({
       where: { id: decoded.sub },
       include: { roles: true },
+      omit: {
+        password: true,
+        remember_token: true,
+      },
     });
 
     if (!user) {

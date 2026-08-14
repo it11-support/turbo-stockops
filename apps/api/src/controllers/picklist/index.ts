@@ -92,7 +92,13 @@ export const pickListsDetailController = async (
   res: Response,
 ) => {
   try {
-    const user = req.user as any;
+    if (!req.user) {
+      return res.status(401).json({
+        message: 'Unauthorized',
+      })
+    }
+    const user = req.user
+    console.log(user)
     const pickListId = Number(req.params.id);
 
     const perPage = Number(req.query.per_page ?? 10);
