@@ -57,7 +57,7 @@
     "html2canvas": "^1.4.1",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^3.8.4",
-    "laravel-echo": "^2.3.7",
+    "laravel-echo": "^2.4.0",
     "lucide-react": "^1.24.0",
     "pusher-js": "^8.5.0",
     "react": "^19.2.8",
