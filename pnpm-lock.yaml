@@ -249,13 +249,13 @@ importers:
         version: 3.8.4(jspdf@4.2.1)
       laravel-echo:
         specifier: ^2.3.7
-        version: 2.3.7(pusher-js@8.5.0)(socket.io-client@4.8.3)
+        version: 2.3.7(pusher-js@8.6.0)(socket.io-client@4.8.3)
       lucide-react:
         specifier: ^1.24.0
         version: 1.24.0(react@19.2.8)
       pusher-js:
-        specifier: ^8.5.0
-        version: 8.5.0
+        specifier: ^8.6.0
+        version: 8.6.0
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -4829,8 +4829,8 @@ packages:
   pure-rand@6.1.0:
     resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
-  pusher-js@8.5.0:
-    resolution: {integrity: sha512-V7uzGi9bqOOOyM/6IkJdpFyjGZj7llz1v0oWnYkZKcYLvbz6VcHVLmzKqkvegjuMumpfIEKGLmWHwFb39XFCpw==}
+  pusher-js@8.6.0:
+    resolution: {integrity: sha512-wShJPfCS/kYkCBVzVW67wa9cnQIgHTszEK2XHNrFkOgGruuGw081aERAxfRjfdFU+WcIt8x6dvbwkTW4iZuQ8Q==}
 
   qs@6.15.2:
     resolution: {integrity: sha512-Rzq0KEyX/w/tEybncDgdkZrJgVUsUMk3xjh3t5bv3S1HTAtg+uOYt72+ZfwiQwKdysThkTBdL/rTi6HDmX9Ddw==}
@@ -9439,9 +9439,9 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
-  laravel-echo@2.3.7(pusher-js@8.5.0)(socket.io-client@4.8.3):
+  laravel-echo@2.3.7(pusher-js@8.6.0)(socket.io-client@4.8.3):
     optionalDependencies:
-      pusher-js: 8.5.0
+      pusher-js: 8.6.0
       socket.io-client: 4.8.3
 
   leac@0.6.0: {}
@@ -10073,7 +10073,7 @@ snapshots:
 
   pure-rand@6.1.0: {}
 
-  pusher-js@8.5.0:
+  pusher-js@8.6.0:
     dependencies:
       tweetnacl: 1.0.3
 
