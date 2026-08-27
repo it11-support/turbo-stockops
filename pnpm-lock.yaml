@@ -131,8 +131,8 @@ importers:
         specifier: ^6.1.21
         version: 6.1.21(@fullcalendar/core@6.1.20)(rrule@2.8.1)
       '@fullcalendar/timegrid':
-        specifier: ^6.1.15
-        version: 6.1.20(@fullcalendar/core@6.1.20)
+        specifier: ^6.1.21
+        version: 6.1.21(@fullcalendar/core@6.1.20)
       '@google/generative-ai':
         specifier: ^0.24.1
         version: 0.24.1
@@ -249,7 +249,7 @@ importers:
         version: 3.8.4(jspdf@4.2.1)
       laravel-echo:
         specifier: ^2.4.0
-        version: 2.4.0(pusher-js@8.5.0)(socket.io-client@4.8.3)
+        version: 2.4.0(pusher-js@8.6.0)(socket.io-client@4.8.3)
       lucide-react:
         specifier: ^1.24.0
         version: 1.24.0(react@19.2.8)
@@ -631,6 +631,11 @@ packages:
     peerDependencies:
       '@fullcalendar/core': ~6.1.20
 
+  '@fullcalendar/daygrid@6.1.21':
+    resolution: {integrity: sha512-QYb1y40RGYLlOxKpYWg8O+7njEnKnFG8Tt7qjnubJGR35s1phQg67E+81y2TyAbbm59p2JFOCXGDk9t6KDujIA==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.21
+
   '@fullcalendar/interaction@6.1.20':
     resolution: {integrity: sha512-p6txmc5txL0bMiPaJxe2ip6o0T384TyoD2KGdsU6UjZ5yoBlaY+dg7kxfnYKpYMzEJLG58n+URrHr2PgNL2fyA==}
     peerDependencies:
@@ -654,10 +659,10 @@ packages:
       '@fullcalendar/core': ~6.1.21
       rrule: ^2.6.0
 
-  '@fullcalendar/timegrid@6.1.20':
-    resolution: {integrity: sha512-4H+/MWbz3ntA50lrPif+7TsvMeX3R1GSYjiLULz0+zEJ7/Yfd9pupZmAwUs/PBpA6aAcFmeRr0laWfcz1a9V1A==}
+  '@fullcalendar/timegrid@6.1.21':
+    resolution: {integrity: sha512-2DnShx/jallGmb8QCkr6pAOu/zuPhJrP7+uTrAtSnbqsX7GF3lTxqSeNGkTQwsgF5g/ia8udhQ+JNYaE+TN1cQ==}
     peerDependencies:
-      '@fullcalendar/core': ~6.1.20
+      '@fullcalendar/core': ~6.1.21
 
   '@google/generative-ai@0.24.1':
     resolution: {integrity: sha512-MqO+MLfM6kjxcKoy0p1wRzG3b4ZZXtPI+z2IE26UogS2Cm/XHO+7gGRBh6gcJsOiIVoH93UwKvW4HdgiOZCy9Q==}
@@ -5780,6 +5785,10 @@ snapshots:
     dependencies:
       '@fullcalendar/core': 6.1.20
 
+  '@fullcalendar/daygrid@6.1.21(@fullcalendar/core@6.1.20)':
+    dependencies:
+      '@fullcalendar/core': 6.1.20
+
   '@fullcalendar/interaction@6.1.20(@fullcalendar/core@6.1.20)':
     dependencies:
       '@fullcalendar/core': 6.1.20
@@ -5799,10 +5808,10 @@ snapshots:
       '@fullcalendar/core': 6.1.20
       rrule: 2.8.1
 
-  '@fullcalendar/timegrid@6.1.20(@fullcalendar/core@6.1.20)':
+  '@fullcalendar/timegrid@6.1.21(@fullcalendar/core@6.1.20)':
     dependencies:
       '@fullcalendar/core': 6.1.20
-      '@fullcalendar/daygrid': 6.1.20(@fullcalendar/core@6.1.20)
+      '@fullcalendar/daygrid': 6.1.21(@fullcalendar/core@6.1.20)
 
   '@google/generative-ai@0.24.1': {}
 
@@ -9433,7 +9442,7 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
-  laravel-echo@2.4.0(pusher-js@8.5.0)(socket.io-client@4.8.3):
+  laravel-echo@2.4.0(pusher-js@8.6.0)(socket.io-client@4.8.3):
     optionalDependencies:
       pusher-js: 8.6.0
       socket.io-client: 4.8.3
