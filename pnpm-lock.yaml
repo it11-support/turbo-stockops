@@ -221,8 +221,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/types-library
       axios:
-        specifier: ^1.17.0
-        version: 1.18.0
+        specifier: ^1.19.0
+        version: 1.19.0
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.1
@@ -249,7 +249,7 @@ importers:
         version: 3.8.4(jspdf@4.2.1)
       laravel-echo:
         specifier: ^2.4.0
-        version: 2.4.0(pusher-js@8.5.0)(socket.io-client@4.8.3)
+        version: 2.4.0(pusher-js@8.6.0)(socket.io-client@4.8.3)
       lucide-react:
         specifier: ^1.24.0
         version: 1.24.0(react@19.2.8)
@@ -3187,8 +3187,8 @@ packages:
     resolution: {integrity: sha512-NZKeq9AfyQvEeNlN0zSYAaWrmBffJh3IELMZfRpJVWgrpEbtEpnjvzqBPf+mxoI287JohRDoa+/nsfqqiZmF6g==}
     engines: {node: '>= 6.0.0'}
 
-  axios@1.18.0:
-    resolution: {integrity: sha512-E32NzpYKp++W7XRe52rHiXV2ehxmh3wbdgO7MHeFM+vqxLBYHzt0ElkiImtOBxtOmyp0yoC8C6uESVV84Y2/hw==}
+  axios@1.19.0:
+    resolution: {integrity: sha512-ht/iuYZXEjFxLH/Hkezgd7m6JKlHHXEUSneaDz8uZe1Gj5QZtCnpyDsckvAiEnT89OEbCLmnte4R4sn7P0EKFw==}
 
   bail@2.0.2:
     resolution: {integrity: sha512-0xO6mYd7JB2YesxDKplafRpsiOzPt9V02ddPCLbY1xYGPOX24NTyN50qnUxgCPcSoYMhKpAuBTjQoRZCAkUDRw==}
@@ -3966,10 +3966,6 @@ packages:
 
   has-tostringtag@1.0.2:
     resolution: {integrity: sha512-NqADB8VjPFLM2V0VvHUewwwsw0ZWBaIdgo+ieHtK3hasLz4qeCRjYcqfB6AQrBggRKppKF8L52/VqdVsO47Dlw==}
-    engines: {node: '>= 0.4'}
-
-  hasown@2.0.2:
-    resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
 
   hasown@2.0.4:
@@ -8354,7 +8350,7 @@ snapshots:
 
   aws-ssl-profiles@1.1.2: {}
 
-  axios@1.18.0:
+  axios@1.19.0:
     dependencies:
       follow-redirects: 1.16.0
       form-data: 4.0.6
@@ -9210,10 +9206,6 @@ snapshots:
     dependencies:
       has-symbols: 1.1.0
 
-  hasown@2.0.2:
-    dependencies:
-      function-bind: 1.1.2
-
   hasown@2.0.4:
     dependencies:
       function-bind: 1.1.2
@@ -9340,7 +9332,7 @@ snapshots:
 
   is-core-module@2.16.1:
     dependencies:
-      hasown: 2.0.2
+      hasown: 2.0.4
 
   is-decimal@2.0.1: {}
 
@@ -9433,7 +9425,7 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
-  laravel-echo@2.4.0(pusher-js@8.5.0)(socket.io-client@4.8.3):
+  laravel-echo@2.4.0(pusher-js@8.6.0)(socket.io-client@4.8.3):
     optionalDependencies:
       pusher-js: 8.6.0
       socket.io-client: 4.8.3
