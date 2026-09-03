@@ -38,7 +38,7 @@
     "jsonwebtoken": "^9.0.3",
     "prisma": "^7.9.1",
     "prisma-extension-pagination": "^0.7.6",
-    "qs": "^6.15.2",
+    "qs": "^6.16.0",
     "tsc-alias": "^1.8.17",
     "tsx": "^4.23.12"
   }
