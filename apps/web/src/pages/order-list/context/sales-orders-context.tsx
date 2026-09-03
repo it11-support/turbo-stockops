@@ -11,6 +11,24 @@ import { SalesOrderItem } from '@/types'
 
 type DialogType = 'invite' | 'add' | 'edit' | 'delete'
 
+interface AreaOption {
+  value: string
+  label: string
+}
+
+interface Area {
+  TrnspCode: number
+  TrnspName: string
+}
+
+interface SalesOrderQueryParams {
+  page?: number
+  per_page?: number
+  search?: string
+  sort?: string
+  [key: string]: string | number | undefined
+}
+
 interface SalesPersonContextType {
   search: string
   setSearch: (value: string) => void
@@ -21,17 +39,15 @@ interface SalesPersonContextType {
   setOpen: (str: DialogType | null) => void
   currentRow: SalesOrderItem | null
   setCurrentRow: React.Dispatch<React.SetStateAction<SalesOrderItem | null>>
-  salesOrders: any[]
+  salesOrders: SalesOrderItem[]
   total: number
   isLoading: boolean
   filters: ColumnFiltersState
   setFilters: React.Dispatch<React.SetStateAction<ColumnFiltersState>>
   sortOptions: SortingState
   setSortOptions: React.Dispatch<React.SetStateAction<SortingState>>
-  area: { value: string; label: string }[]
-  setArea: React.Dispatch<
-    React.SetStateAction<{ value: string; label: string }[]>
-  >
+  area: AreaOption[]
+  setArea: React.Dispatch<React.SetStateAction<AreaOption[]>>
 }
 
 const SalesPersonContext = React.createContext<SalesPersonContextType | null>(
@@ -50,17 +66,17 @@ export default function SalesOrderProvider({ children }: Props) {
     pageSize: 20,
   })
   const [total, setTotal] = useState(0)
-  const [salesOrders, setSalesOrders] = useState<any[]>([])
+  const [salesOrders, setSalesOrders] = useState<SalesOrderItem[]>([])
   const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [filters, setFilters] = useState<ColumnFiltersState>([])
   const [sortOptions, setSortOptions] = useState<SortingState>([])
   const [debouncedSearch, setDebouncedSearch] = useState(search)
-  const [area, setArea] = useState<{ value: string; label: string }[]>([])
+  const [area, setArea] = useState<AreaOption[]>([])
 
   // API request
   const fetchSalesOrders = async (masterSalesOrder = false) => {
-    const params: Record<string, any> = {}
+    const params: SalesOrderQueryParams = {}
     setIsLoading(true)
     if (!masterSalesOrder) {
       params['page'] = pagination.pageIndex + 1
@@ -72,8 +88,10 @@ export default function SalesOrderProvider({ children }: Props) {
 
       if (filters.length > 0) {
         filters.forEach((f) => {
-          if (Array.isArray(f.value)) {
-            params[f.id] = f.value.length > 1 ? f.value.join(',') : f.value[0]
+          const value = f.value as unknown
+          if (Array.isArray(value)) {
+            const arr = value as string[]
+            params[f.id] = arr.length > 1 ? arr.join(',') : arr[0]
           }
         })
       }
@@ -102,8 +120,8 @@ export default function SalesOrderProvider({ children }: Props) {
       const res = await api.get('/area')
       const { data } = res
       const areas = data.data || []
-      const areaOptions = areas.map((area: any) => ({
-        value: area.TrnspCode,
+      const areaOptions = areas.map((area: Area) => ({
+        value: String(area.TrnspCode),
         label: area.TrnspName,
       }))
       setArea(areaOptions)

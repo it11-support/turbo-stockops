@@ -16,6 +16,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  Row,
 } from '@tanstack/react-table'
 
 import {
@@ -63,10 +64,10 @@ export function DataTable<TData, TValue>({
     {}
   )
   const globalFilterFn = React.useCallback(
-    (row: any, _columnId: string, filterValue: string) => {
+    (row: Row<TData>, _columnId: string, filterValue: string) => {
       const searchValue = filterValue.toLowerCase()
 
-      const getValue = (obj: any): any => {
+      const getValue = (obj: unknown): unknown[] => {
         if (Array.isArray(obj)) {
           return obj.flatMap((item) => getValue(item))
         }
@@ -77,7 +78,9 @@ export function DataTable<TData, TValue>({
       }
 
       const flattenedValues = getValue(row.original)
-      return flattenedValues.some((value: any) => value.includes(searchValue))
+      return flattenedValues.some(
+        (value: unknown) => typeof value === 'string' && value.includes(searchValue)
+      )
     },
     []
   )

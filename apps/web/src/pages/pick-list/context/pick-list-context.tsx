@@ -19,6 +19,18 @@ import { format } from 'date-fns'
 type DialogType = 'print' | 'add' | 'edit' | 'delete'
 
 let fetchTimeout: ReturnType<typeof setTimeout> | null = null
+
+interface PickListQueryParams {
+  page?: number
+  per_page?: number
+  search?: string
+  sortBy?: string
+  sortDesc?: boolean
+  paging?: boolean
+  date?: string
+  [key: string]: string | number | boolean | undefined
+}
+
 interface PickListContextType {
   search: string
   setSearch: (value: string) => void
@@ -182,7 +194,7 @@ export default function PickListProvider({ children }: Props) {
 
     fetchTimeout = setTimeout(async () => {
       setIsLoading(true)
-      const params: any = {
+      const params: PickListQueryParams = {
         page: pagination.pageIndex + 1,
         per_page: pagination.pageSize,
       }
@@ -193,10 +205,12 @@ export default function PickListProvider({ children }: Props) {
 
       if (filters.length > 0) {
         filters.forEach((f) => {
-          if (Array.isArray(f.value)) {
-            params[f.id] = f.value.length > 1 ? f.value.join(',') : f.value[0]
-          } else if (f.value) {
-            params[f.id] = f.value
+          const value = f.value as unknown
+          if (Array.isArray(value)) {
+            const arr = value as string[]
+            params[f.id] = arr.length > 1 ? arr.join(',') : arr[0]
+          } else if (value) {
+            params[f.id] = value as string
           }
         })
       }
@@ -239,7 +253,7 @@ export default function PickListProvider({ children }: Props) {
 
   async function fetchPickListDetails(paging = true) {
     setIsLoading(true)
-    const params: any = {
+    const params: PickListQueryParams = {
       ...(paging && {
         page: pagination.pageIndex + 1,
         per_page: pagination.pageSize,
@@ -252,8 +266,10 @@ export default function PickListProvider({ children }: Props) {
 
     if (filters.length > 0) {
       filters.forEach((f) => {
-        if (Array.isArray(f.value)) {
-          params[f.id] = f.value.length > 1 ? f.value.join(',') : f.value[0]
+        const value = f.value as unknown
+        if (Array.isArray(value)) {
+          const arr = value as string[]
+          params[f.id] = arr.length > 1 ? arr.join(',') : arr[0]
         }
       })
     }
@@ -291,7 +307,7 @@ export default function PickListProvider({ children }: Props) {
       const res = await api.get(`/orders/${id}`)
       const { data } = res
       setSalesOrders(data.data)
-      setSalesOrderIds(data.data.map((o: any) => o.sales_order_id))
+      setSalesOrderIds(data.data.map((o: SalesOrderSummary) => o.sales_order_id))
     } catch (error) {
       console.error('Failed to fetch sales person:', error)
     } finally {

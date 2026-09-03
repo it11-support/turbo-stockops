@@ -10,7 +10,13 @@ const userRoleSchema = z.object({
   description: z.string().nullable(),
   created_at: z.string(),
   updated_at: z.string(),
-  permissions: z.array(z.any()),
+  permissions: z.array(
+    z.object({
+      id: z.number(),
+      name: z.string(),
+      description: z.string(),
+    })
+  ),
 })
 
 // schema User dari backend

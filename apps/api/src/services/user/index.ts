@@ -1,4 +1,4 @@
-import { usersWhereInput } from "@/generated/prisma/models/users.js";
+import { usersWhereInput, usersUpdateInput } from "@/generated/prisma/models/users.js";
 import prisma from "@/libs/prisma/index.js";
 import bcrypt from "bcryptjs";
 
@@ -221,7 +221,7 @@ export const userUpdateService = async (
       if (emailExists && Number(emailExists.id) !== id) {
         throw { message: "Email already exists." };
       }
-      const updateData: any = {
+      const updateData: usersUpdateInput = {
         name,
         username,
         email,

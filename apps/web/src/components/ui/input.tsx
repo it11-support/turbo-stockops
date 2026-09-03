@@ -63,7 +63,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {isClearVisible && (
             <XIcon
               className='mx-2 text-muted-foreground hover:text-red-500'
-              onClick={(e: any) => {
+              onClick={(e: React.MouseEvent<SVGSVGElement>) => {
                 e.stopPropagation()
                 handleClear(e)
               }}

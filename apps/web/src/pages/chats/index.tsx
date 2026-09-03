@@ -95,7 +95,7 @@ export default function Chats() {
     if (fileInputRef.current) fileInputRef.current.value = ''
     if (imageInputRef.current) imageInputRef.current.value = ''
   }
-  const handleReaction = (messageTimestamp: string, emoji: any) => {
+  const handleReaction = (messageTimestamp: string, emoji: string) => {
     const updatedMessages = selectedUser.messages.map((msg) => {
       if (msg.timestamp === messageTimestamp) {
         const updatedReactions = { ...msg.reactions }
