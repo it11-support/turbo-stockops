@@ -48,7 +48,7 @@ export function PinInput({
 }: PinInputProps) {
   const count = React.Children.toArray(children).filter(
     (c) =>
-      React.isValidElement(c) && (c.type as any).displayName === 'PinInputField'
+      React.isValidElement(c) && (c.type as React.ElementType & { displayName?: string }).displayName === 'PinInputField'
   ).length
 
   const controlled = value !== undefined
@@ -97,8 +97,8 @@ export function PinInput({
   let index = 0
   const rendered = React.Children.map(children, (child) => {
     if (!React.isValidElement(child)) return child
-    if ((child.type as any).displayName !== 'PinInputField') return child
-    return React.cloneElement(child as React.ReactElement<any>, {
+    if ((child.type as React.ElementType & { displayName?: string }).displayName !== 'PinInputField') return child
+    return React.cloneElement(child as React.ReactElement<PinInputFieldProps>, {
       index: index++,
     })
   })
@@ -138,10 +138,10 @@ export const PinInputField = React.forwardRef<
     return (
       <Component
         {...props}
-        ref={(n: any) => {
+        ref={(n: HTMLInputElement | null) => {
           ctx.register(index, n)
           if (typeof ref === 'function') ref(n)
-          else if (ref) (ref as any).current = n
+          else if (ref && n) (ref as React.RefObject<HTMLInputElement>).current = n
         }}
         className={cn('size-10 text-center', className)}
         value={ctx.values[index] ?? ''}
@@ -150,8 +150,8 @@ export const PinInputField = React.forwardRef<
         readOnly={ctx.readOnly}
         type={ctx.mask ? 'password' : ctx.type === 'numeric' ? 'tel' : 'text'}
         inputMode={ctx.type === 'numeric' ? 'numeric' : 'text'}
-        onChange={(e: any) => ctx.setValue(index, e.target.value.slice(-1))}
-        onKeyDown={(e: any) => {
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => ctx.setValue(index, e.target.value.slice(-1))}
+        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
           if (e.key === 'Backspace') {
             e.preventDefault()
             ctx.setValue(index, '')
@@ -159,7 +159,7 @@ export const PinInputField = React.forwardRef<
           }
           onKeyDown?.(e)
         }}
-        onPaste={(e: any) => {
+        onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => {
           e.preventDefault()
           const t = e.clipboardData.getData('text')
           t.split('').forEach((c: string, i: number) => {

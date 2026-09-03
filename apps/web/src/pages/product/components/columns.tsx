@@ -8,6 +8,18 @@ import { brands, categories } from '../data/data'
 import { Button } from '@/components/custom/button'
 import { useState } from 'react'
 
+interface ColorVariant {
+  color: string
+  price: number
+  originalPrice: number
+  stockStatus: string
+}
+
+interface Variant {
+  size: string
+  colors: ColorVariant[]
+}
+
 interface ColumnsProps {
   editProduct: (id: number, updatedProduct: Partial<Product>) => void
   deleteProduct: (id: number) => void
@@ -104,8 +116,8 @@ export const columns = ({
         </div>
       )
     },
-    filterFn: (row, id, value) => {
-      const brand = row.getValue(id) as string
+    filterFn: (row: Row<Product>, _id: string, value: string) => {
+      const brand = row.getValue('brand') as string
       return value.includes(brand)
     },
     accessorFn: (row: Product) => row.general.brand,
@@ -127,9 +139,9 @@ export const columns = ({
         </div>
       )
     },
-    filterFn: (row, id, value) => {
-      const brand = row.getValue(id) as string
-      return value.includes(brand)
+    filterFn: (row: Row<Product>, _id: string, value: string) => {
+      const category = row.getValue('category') as string
+      return value.includes(category)
     },
     accessorFn: (row: Product) => row.general.category,
   },
@@ -154,9 +166,9 @@ export const columns = ({
 
       const getPrice = () => {
         if (selectedSize && selectedColor) {
-          const variant = variants.find((v: any) => v.size === selectedSize)
+          const variant = variants.find((v: Variant) => v.size === selectedSize)
           const colorVariant = variant?.colors.find(
-            (c: any) => c.color === selectedColor
+            (c: ColorVariant) => c.color === selectedColor
           )
           if (colorVariant) {
             return (
@@ -178,7 +190,7 @@ export const columns = ({
         <div className='flex flex-wrap gap-2'>
           <div>
             <div className='flex flex-wrap gap-1'>
-              {variants.map((variant: any) => (
+              {variants.map((variant: Variant) => (
                 <>
                   <Button
                     key={variant.size}
@@ -197,8 +209,8 @@ export const columns = ({
           <div>
             <div className='flex flex-wrap gap-1'>
               {variants
-                .find((v: any) => v.size === selectedSize)
-                ?.colors.map((color: any) => (
+                .find((v: Variant) => v.size === selectedSize)
+                ?.colors.map((color: ColorVariant) => (
                   <>
                     <Button
                       key={color.color}

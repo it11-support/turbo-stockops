@@ -1,4 +1,4 @@
-import { ordersWhereInput } from "@/generated/prisma/models/orders.js";
+import { ordersGetPayload, ordersWhereInput } from "@/generated/prisma/models/orders.js";
 import prisma from "@/libs/prisma/index.js";
 import {
   insertIntoItemTable,
@@ -9,6 +9,20 @@ import {
 } from "@/utils/index.js";
 import dayjs from "dayjs";
 import { OrderListParams } from "@turbo-stockops/types";
+
+interface ClosedOrder {
+  DocNum: number | string
+}
+
+interface ClosedResponse {
+  closed_orders: ClosedOrder[]
+}
+
+type OrderTime = Pick<
+  ordersGetPayload<{}>,
+  'DocDate' | 'DocTime'
+>
+
 
 export const activeOrderService = async () => {
   try {
@@ -104,7 +118,7 @@ export const orderListService = async (params: OrderListParams) => {
     TrnspCode,
   } = params;
 
-  let closed: any = null;
+  let closed: ClosedResponse | null = null
 
   // =========================
   // 1️⃣ Sync master data jika perlu
@@ -141,8 +155,8 @@ export const orderListService = async (params: OrderListParams) => {
 
     closed = await closedRes.json();
 
-    const closedDocNumsInt: number[] = (
-      closed?.closed_orders?.map((o: any) => Number(o.DocNum)) || []
+    const closedDocNumsInt = (
+      closed?.closed_orders?.map((o) => Number(o.DocNum)) || []
     ).filter((n: number) => !isNaN(n));
 
     if (closedDocNumsInt.length) {
@@ -285,7 +299,7 @@ export const getOrderDetailsService = async (pickListId: number) => {
 
   // ✅ Group by DocNum (Sales Order)
   const grouped = pickList.pick_list_details.reduce(
-    (acc: Record<number, any[]>, detail) => {
+    (acc: Record<number, typeof pickList.pick_list_details>, detail) => {
       const docNum = detail.order?.DocNum;
       if (!docNum) return acc;
 
@@ -321,7 +335,7 @@ export const getOrderDetailsService = async (pickListId: number) => {
 
 export const exportOrdersService = async (date: string) => {
   try {
-    
+
     const orders = await prisma.orders.findMany({
       where: {
         CreateDate: new Date(date)
@@ -338,20 +352,26 @@ export const exportOrdersService = async (date: string) => {
   }
 };
 
-export const formatDocTime = (order: any): string | null => {
-  if (order.DocDate && order.DocTime !== null && order.DocTime !== undefined) {
-    const docTime = order.DocTime.toString().padStart(4, "0");
-    const hour = docTime.substring(0, 2);
-    const minute = docTime.substring(2, 4);
+export const formatDocTime = (
+  order: OrderTime,
+): string | null => {
+  if (order.DocDate && order.DocTime != null) {
+    const docTime = order.DocTime.padStart(4, '0')
+    const hour = docTime.substring(0, 2)
+    const minute = docTime.substring(2, 4)
 
-    return `${order.DocDate.toString().slice(0, 10)} ${hour}:${minute}`;
+    return `${String(order.DocDate).slice(0, 10)} ${hour}:${minute}`
   }
 
-  return `${order.DocDate.toString().slice(0, 10)} 08:00` || order.DocDate.toString();
-};
+  if (order.DocDate) {
+    return `${String(order.DocDate).slice(0, 10)} 08:00`
+  }
+
+  return null
+}
 
 export const syncOrderService = async () => {
-  let closed: any = null;
+  let closed: ClosedResponse | null = null;
 
   const [ordersRes, itemsRes] = await Promise.all([
     fetch(`${MSSQL_API}/orders`),
@@ -385,8 +405,8 @@ export const syncOrderService = async () => {
 
   closed = await closedRes.json();
 
-  const closedDocNumsInt: number[] = (
-    closed?.closed_orders?.map((o: any) => Number(o.DocNum)) || []
+  const closedDocNumsInt = (
+    closed?.closed_orders?.map((o) => Number(o.DocNum)) || []
   ).filter((n: number) => !isNaN(n));
 
   if (closedDocNumsInt.length) {

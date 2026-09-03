@@ -1,6 +1,7 @@
 import prisma from "@/libs/prisma/index.js";
 import { areaListService } from "../area/index.js";
-import { pick_listsWhereInput } from "@/generated/prisma/models/pick_lists.js";
+import { pick_listsWhereInput, pick_listsOrderByWithRelationInput, pick_listsGetPayload } from "@/generated/prisma/models/pick_lists.js";
+import { pick_list_detailsGetPayload } from "@/generated/prisma/models/pick_list_details.js";
 import { pick_lists_status } from "@/generated/prisma/enums.js";
 import dayjs from "dayjs";
 
@@ -117,7 +118,7 @@ export const storePickListService = async (params: PickListParams) => {
       orderBy: { id: "desc" },
     });
 
-  let pickList: any = null;
+  let pickList: Awaited<ReturnType<typeof prisma.pick_lists.create>> | Awaited<ReturnType<typeof prisma.pick_lists.findFirst>> | null = null;
 
   await prisma.$transaction(async (tx) => {
     // Gunakan pick_list yang ditemukan, atau buat baru
@@ -255,7 +256,7 @@ export const getPickListsService = async (params: PickListQueryParams) => {
   // =========================
   // Sorting
   // =========================
-  const sortFieldMap: Record<string, (dir: "asc" | "desc") => any> = {
+  const sortFieldMap: Record<string, (dir: "asc" | "desc") => pick_listsOrderByWithRelationInput> = {
     Assignee: (dir) => ({ users: { name: dir } }),
     Status: (dir) => ({ status: dir }),
     Started: (dir) => ({ start_at: dir }),
@@ -263,7 +264,7 @@ export const getPickListsService = async (params: PickListQueryParams) => {
   };
   const sortDirection: "asc" | "desc" = sortDesc ? "desc" : "asc";
 
-  const orderBy =
+  const orderBy: pick_listsOrderByWithRelationInput | pick_listsOrderByWithRelationInput[] =
     sortBy && Object.hasOwn(sortFieldMap, sortBy)
       ? sortFieldMap[sortBy](sortDirection)
       : { created_at: 'desc' };
@@ -300,9 +301,46 @@ export const getPickListsService = async (params: PickListQueryParams) => {
   };
 };
 
+type PickListDetailsWithRelations = pick_listsGetPayload<{
+  include: {
+    users: true;
+    pick_list_details: {
+      include: {
+        order: { include: { item: true } };
+      };
+    };
+  };
+}>;
+
+type PickListDetailItem = pick_list_detailsGetPayload<{
+  include: {
+    order: { include: { item: true } };
+  };
+}>;
+
+type ItemSummary = {
+  item_code: string;
+  item_name: string;
+  demand: number;
+  picked: number;
+  open_qty: number;
+  unit: string | null;
+  rack_no: string | null;
+  picker_name: string;
+};
+
 export const getPickListDetailsService = async (
   pickListId: number,
-): Promise<{ pickList: any; summary: any }> => {
+): Promise<{
+  pickList: PickListDetailsWithRelations & { assignedTo: PickListDetailsWithRelations["users"] };
+  summary: {
+    area: unknown[];
+    picker: string;
+    code: string;
+    due_date: Date | string | null;
+    summary: ItemSummary[];
+  };
+}> => {
   const pickList = await prisma.pick_lists.findUnique({
     where: { id: pickListId },
     include: {
@@ -326,7 +364,7 @@ export const getPickListDetailsService = async (
 
   // Buat summary per item_code
   const itemSummary = Object.values(
-    pickList.pick_list_details.reduce((acc: any, detail: any) => {
+    pickList.pick_list_details.reduce<Record<string, ItemSummary>>((acc, detail) => {
       const code = detail.item_code;
       if (!acc[code]) {
         acc[code] = {
@@ -345,7 +383,7 @@ export const getPickListDetailsService = async (
       acc[code].open_qty += Number(detail.open_qty ?? 0);
       return acc;
     }, {}),
-  ).sort((a: any, b: any) => {
+  ).sort((a, b) => {
     const getRank = (rack?: string) => {
       const r = (rack ?? "").trim();
       if (/^R[0-9]/i.test(r)) return "1" + r;
@@ -356,7 +394,7 @@ export const getPickListDetailsService = async (
       if (rack == null) return "6";
       return "7" + r;
     };
-    return getRank(a.rack_no).localeCompare(getRank(b.rack_no));
+    return getRank(a.rack_no ?? undefined).localeCompare(getRank(b.rack_no ?? undefined));
   });
 
   // summary terpisah
@@ -406,7 +444,8 @@ export const getPickListDetailService = async ({
   });
 
   // 🔁 Pengganti: COALESCE(items.RackNo, pick_list_details.rack_no)
-  const getRack = (d: any) => d.order?.item?.RackNo ?? d.rack_no ?? null;
+  const getRack = (d: PickListDetailItem): string | null =>
+    d.order?.item?.RackNo ?? d.rack_no ?? null;
 
   // 🔁 Pengganti ORDER BY CASE REGEXP
   const getRank = (rack?: string | null) => {

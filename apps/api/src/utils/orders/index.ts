@@ -3,8 +3,62 @@ import path from "path";
 import fs from "fs";
 import csv from "csv-parser";
 
-export async function insertToOrderTable(data: any[], returnResponse = false) {
-  const results: any[] = [];
+type SapOrderLine = {
+  DocNum?: number | string | null;
+  LineNum?: number | string | null;
+  OpenQty?: number | string | null;
+  Quantity?: number | string | null;
+  ItemCode?: string | null;
+  Dscription?: string | null;
+  UpdateDate?: string | null;
+  CreateDate?: string | null;
+  DocDate?: string | null;
+  DocTime?: string | null;
+  DocDueDate?: string | null;
+  ShipDate?: string | null;
+  CardCode?: string | null;
+  CardName?: string | null;
+  Address?: string | null;
+  Phone1?: string | null;
+  TrnspCode?: number | string | null;
+  TrnspName?: string | null;
+  Comments?: string | null;
+  SlpCode?: number | string | null;
+  SlpName?: string | null;
+  USERID?: string | null;
+  U_NAME?: string | null;
+  Memo?: string | null;
+  DelivrdQty?: number | string | null;
+  unitMsr?: string | null;
+  NumPerMsr?: number | string | null;
+  unitMsr2?: string | null;
+  NumPerMsr2?: number | string | null;
+  BuyUnitMsr?: string | null;
+  NumInBuy?: number | string | null;
+  SalUnitMsr?: string | null;
+  NumInSale?: number | string | null;
+  SuppCatNum?: string | null;
+  Price?: number | string | null;
+  OnHand?: number | string | null;
+  InvntryUom?: string | null;
+  OrdrMulti?: number | string | null;
+  ItemName?: string | null;
+  Barcode?: string | null;
+  RackNo?: string | null;
+};
+
+type SapItemLine = {
+  ItemCode: string;
+  ItemName?: string;
+  InvntryUom?: string | null;
+  CardCode?: string;
+  CardName?: string;
+  RackNo?: string | null;
+  Barcode?: string | null;
+};
+
+export async function insertToOrderTable(data: SapOrderLine[], returnResponse = false) {
+  const results: unknown[] = [];
   if (!Array.isArray(data) || data.length === 0) return returnResponse ? results : null;
 
   // -------------------------------------------------------------------------
@@ -59,7 +113,7 @@ export async function insertToOrderTable(data: any[], returnResponse = false) {
           const demand = Number(existingOrder.Quantity || 0);
           const picked = Number(detail?.picked || 0);
           const complete = demand - picked === 0;
-          if (complete || openQty <= 0) continue;
+          if (complete || (openQty as unknown as number) <= 0) continue;
         }
 
         // Update order row
@@ -134,7 +188,7 @@ export async function insertToOrderTable(data: any[], returnResponse = false) {
   return returnResponse ? results : null;
 }
 
-export async function insertIntoItemTable(data: any[]) {
+export async function insertIntoItemTable(data: SapItemLine[]) {
   if (!Array.isArray(data)) return;
 
   for (const item of data) {
@@ -148,10 +202,10 @@ export async function insertIntoItemTable(data: any[]) {
         await prisma.items.update({
           where: { ItemCode: item.ItemCode },
           data: {
-            ItemName: item.ItemName,
+            ItemName: item.ItemName ?? "",
             InvntryUom: item.InvntryUom,
-            CardCode: item.CardCode,
-            CardName: item.CardName,
+            CardCode: item.CardCode ?? "",
+            CardName: item.CardName ?? "",
           },
         });
       } else {
@@ -159,10 +213,10 @@ export async function insertIntoItemTable(data: any[]) {
         await prisma.items.create({
           data: {
             ItemCode: item.ItemCode,
-            ItemName: item.ItemName,
+            ItemName: item.ItemName ?? "",
             InvntryUom: item.InvntryUom,
-            CardCode: item.CardCode,
-            CardName: item.CardName,
+            CardCode: item.CardCode ?? "",
+            CardName: item.CardName ?? "",
           },
         });
       }
@@ -183,12 +237,12 @@ export async function updateItemsTableFromCSV() {
   console.log(`Updating items from CSV: ${filePath}`);
 
   return new Promise<void>((resolve, reject) => {
-    const updates: Promise<any>[] = [];
+    const updates: Promise<unknown>[] = [];
 
     fs.createReadStream(filePath)
       .pipe(csv())
       .on("data", (row) => {
-        const { ItemCode, ItemName, RackNo } = row;
+        const { ItemCode, ItemName, RackNo } = row as Record<string, string>;
 
         if (!ItemCode || !RackNo) {
           console.warn(
@@ -234,12 +288,12 @@ export async function updateBarcodeFromCSV() {
   console.log(`Updating items from CSV: ${filePath}`);
 
   return new Promise<void>((resolve, reject) => {
-    const updates: Promise<any>[] = [];
+    const updates: Promise<unknown>[] = [];
 
     fs.createReadStream(filePath)
       .pipe(csv())
       .on("data", (row) => {
-        const { ItemCode, Barcode } = row;
+        const { ItemCode, Barcode } = row as Record<string, string>;
 
         if (!ItemCode || !Barcode) {
           console.warn(
@@ -273,7 +327,12 @@ export async function updateBarcodeFromCSV() {
       });
   });
 }
-const buildOrderData = (item: any, lineNum: number, openQty: any) => {
+const buildOrderData = (item: SapOrderLine, lineNum: number, openQty: number | string | null | undefined) => {
+  const toNum = (v: number | string | null | undefined): number | null => {
+    if (v === null || v === undefined || v === "") return null;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  };
   return {
     UpdateDate: item.UpdateDate ? new Date(`${item.UpdateDate}Z`) : null,
     CreateDate: item.CreateDate ? new Date(`${item.CreateDate}Z`) : null,
@@ -285,10 +344,10 @@ const buildOrderData = (item: any, lineNum: number, openQty: any) => {
     CardName: item.CardName ?? null,
     Address: item.Address ?? null,
     Phone1: item.Phone1 ?? null,
-    TrnspCode: item.TrnspCode ?? null,
+    TrnspCode: toNum(item.TrnspCode ?? null),
     TrnspName: item.TrnspName ?? null,
     Comments: item.Comments ?? null,
-    SlpCode: item.SlpCode ?? null,
+    SlpCode: toNum(item.SlpCode ?? null),
     SlpName: item.SlpName ?? null,
     USERID: String(item.USERID ?? ""),
     U_NAME: item.U_NAME ?? null,
@@ -296,22 +355,22 @@ const buildOrderData = (item: any, lineNum: number, openQty: any) => {
     LineNum: lineNum,
     ItemCode: item.ItemCode ?? null,
     Dscription: item.Dscription ?? null,
-    Quantity: item.Quantity ?? null,
-    OpenQty: openQty,
-    DelivrdQty: item.DelivrdQty ?? null,
+    Quantity: toNum(item.Quantity ?? null),
+    OpenQty: openQty !== undefined && openQty !== null ? toNum(openQty) : null,
+    DelivrdQty: toNum(item.DelivrdQty ?? null),
     unitMsr: item.unitMsr ?? null,
-    NumPerMsr: item.NumPerMsr ?? null,
+    NumPerMsr: toNum(item.NumPerMsr ?? null),
     unitMsr2: item.unitMsr2 ?? null,
-    NumPerMsr2: item.NumPerMsr2 ?? null,
+    NumPerMsr2: toNum(item.NumPerMsr2 ?? null),
     BuyUnitMsr: item.BuyUnitMsr ?? null,
-    NumInBuy: item.NumInBuy ?? null,
+    NumInBuy: toNum(item.NumInBuy ?? null),
     SalUnitMsr: item.SalUnitMsr ?? null,
-    NumInSale: item.NumInSale ?? null,
+    NumInSale: toNum(item.NumInSale ?? null),
     SuppCatNum: item.SuppCatNum ?? null,
-    Price: item.Price ?? null,
-    OnHand: item.OnHand ?? null,
+    Price: toNum(item.Price ?? null),
+    OnHand: toNum(item.OnHand ?? null),
     InvntryUom: item.InvntryUom ?? null,
-    OrdrMulti: item.OrdrMulti ?? null,
+    OrdrMulti: toNum(item.OrdrMulti ?? null),
     updated_at: new Date(),
   };
 }

@@ -11,6 +11,14 @@ import api from '@/lib/api'
 
 type UsersDialogType = 'invite' | 'add' | 'edit' | 'delete'
 
+interface UsersQueryParams {
+  page?: number
+  per_page?: number
+  search?: string
+  sort?: string
+  [key: string]: string | number | undefined
+}
+
 interface UsersContextType {
   search: string
   setSearch: (value: string) => void
@@ -21,7 +29,7 @@ interface UsersContextType {
   setOpen: (str: UsersDialogType | null) => void
   currentRow: User | null
   setCurrentRow: React.Dispatch<React.SetStateAction<User | null>>
-  users: any[]
+  users: User[]
   total: number
   isLoading: boolean
   filters: ColumnFiltersState
@@ -47,7 +55,7 @@ export default function UsersProvider({ children }: Props) {
     pageSize: 10,
   })
   const [total, setTotal] = useState(0)
-  const [users, setUsers] = useState<any[]>([])
+  const [users, setUsers] = useState<User[]>([])
   const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [filters, setFilters] = useState<ColumnFiltersState>([])
@@ -93,7 +101,7 @@ export default function UsersProvider({ children }: Props) {
   }
 
   const fetchUsers = async () => {
-    const params: any = {
+    const params: UsersQueryParams = {
       page: pagination.pageIndex + 1,
       per_page: pagination.pageSize,
     }
@@ -104,8 +112,10 @@ export default function UsersProvider({ children }: Props) {
 
     if (filters.length > 0) {
       filters.forEach((f) => {
-        if (Array.isArray(f.value)) {
-          params[f.id] = f.value.length > 1 ? f.value.join(',') : f.value[0]
+        const value = f.value as unknown
+        if (Array.isArray(value)) {
+          const arr = value as string[]
+          params[f.id] = arr.length > 1 ? arr.join(',') : arr[0]
         }
       })
     }

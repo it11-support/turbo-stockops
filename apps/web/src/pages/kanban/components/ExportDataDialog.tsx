@@ -15,11 +15,17 @@ import { IconFileTypeCsv, IconFileTypePdf } from '@tabler/icons-react'
 import { Vulnerability } from '../data/schema'
 declare module 'jspdf' {
   interface jsPDF {
-    autoTable: (options: any) => jsPDF
+    autoTable: (options: {
+      head?: (string | number)[][]
+      body?: (string | number)[][]
+      styles?: Record<string, unknown>
+      columnStyles?: Record<string, Record<string, unknown>>
+      [key: string]: unknown
+    }) => jsPDF
   }
 }
 interface ExportDataDialogProps {
-  data: any[]
+  data: Vulnerability[]
 }
 
 const ExportDataDialog: React.FC<ExportDataDialogProps> = ({ data }) => {

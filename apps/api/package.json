@@ -25,8 +25,8 @@
     "typescript-eslint": "8"
   },
   "dependencies": {
-    "@prisma/adapter-mariadb": "^7.9.1",
-    "@prisma/client": "^7.9.1",
+    "@prisma/adapter-mariadb": "^7.10.0",
+    "@prisma/client": "^7.10.0",
     "@turbo-stockops/types": "workspace:*",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
@@ -36,10 +36,10 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.6.1",
     "jsonwebtoken": "^9.0.3",
-    "prisma": "^7.9.1",
+    "prisma": "^7.10.0",
     "prisma-extension-pagination": "^0.7.6",
-    "qs": "^6.15.2",
+    "qs": "^6.16.0",
     "tsc-alias": "^1.8.17",
-    "tsx": "^4.23.1"
+    "tsx": "^4.23.12"
   }
 }

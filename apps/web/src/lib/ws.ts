@@ -2,7 +2,7 @@ import { io, Socket } from 'socket.io-client'
 
 let socket: Socket | null = null
 
-interface WSOptions<T = any> {
+interface WSOptions<T = unknown> {
   event: string
   callback: (data: T) => void
 }
@@ -25,7 +25,7 @@ const initSocket = () => {
 }
 
 // subscribe ke event
-export const subscribeWS = <T = any>({ event, callback }: WSOptions<T>) => {
+export const subscribeWS = <T = unknown>({ event, callback }: WSOptions<T>) => {
   const s = initSocket()
   s.on(event, callback)
 }

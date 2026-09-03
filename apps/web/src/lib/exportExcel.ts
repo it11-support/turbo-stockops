@@ -11,7 +11,7 @@ export function exportTableToExcel<TData>(
   XLSX.writeFile(workbook, `${fileName}.xlsx`)
 }
 
-export const importExcel = (file: File): Promise<any[]> => {
+export const importExcel = (file: File): Promise<unknown[]> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = (event) => {

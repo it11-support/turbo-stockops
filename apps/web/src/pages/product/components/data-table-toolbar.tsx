@@ -41,7 +41,13 @@ interface DataTableToolbarProps<TData> {
 
 declare module 'jspdf' {
   interface jsPDF {
-    autoTable: (options: any) => jsPDF
+    autoTable: (options: {
+      head?: (string | number)[][]
+      body?: (string | number)[][]
+      styles?: Record<string, unknown>
+      columnStyles?: Record<string, Record<string, unknown>>
+      [key: string]: unknown
+    }) => jsPDF
   }
 }
 
@@ -89,26 +95,30 @@ export function DataTableToolbar<TData>({
     // Here you would typically update your application state or send the data to your backend
   }
 
-  const flattenObject = (obj: any, prefix = ''): { [key: string]: any } => {
-    return Object.keys(obj).reduce((acc: { [key: string]: any }, k: string) => {
+  const flattenObject = (obj: unknown, prefix = ''): Record<string, unknown> => {
+    if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+      return {}
+    }
+    return Object.keys(obj as Record<string, unknown>).reduce((acc: Record<string, unknown>, k: string) => {
       const pre = prefix.length ? prefix + '.' : ''
+      const value = (obj as Record<string, unknown>)[k]
       if (
-        typeof obj[k] === 'object' &&
-        obj[k] !== null &&
-        !Array.isArray(obj[k])
+        typeof value === 'object' &&
+        value !== null &&
+        !Array.isArray(value)
       ) {
-        Object.assign(acc, flattenObject(obj[k], pre + k))
+        Object.assign(acc, flattenObject(value, pre + k))
       } else {
-        acc[pre + k] = obj[k]
+        acc[pre + k] = value
       }
       return acc
     }, {})
   }
 
-  const formatValue = (value: any): string => {
+  const formatValue = (value: unknown): string => {
     if (Array.isArray(value)) {
       return value
-        .map((v) => (typeof v === 'object' ? JSON.stringify(v) : v))
+        .map((v) => (typeof v === 'object' && v !== null ? JSON.stringify(v) : String(v)))
         .join('; ')
     } else if (typeof value === 'object' && value !== null) {
       return JSON.stringify(value)

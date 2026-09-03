@@ -3,8 +3,15 @@ import { useEffect } from 'react'
 // import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 // import { getMails } from '@/api/emailAPI'
 
+interface Email {
+  id: string
+  to: string
+  subject: string
+  status: string
+}
+
 export default function ListEmail() {
-  // const [listEmails, setLitEmails] = useState([])
+  // const [listEmails, setLitEmails] = useState<Email[]>([])
   useEffect(() => {
     const handleFetch = async () => {
       // const response = await getMails();
@@ -16,7 +23,7 @@ export default function ListEmail() {
     <>
       <ComingSoon />
       {/* <div className="p-8">
-                <h1 className="text-3xl font-bold mb-6">Emails Management</h1> */}
+                  <h1 className="text-3xl font-bold mb-6">Emails Management</h1> */}
       {/* <Table>
                     <TableHeader>
                         <TableRow>
@@ -26,7 +33,7 @@ export default function ListEmail() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {listEmails.map((listEmail: any) => (
+                        {listEmails.map((listEmail: Email) => (
                             <TableRow key={listEmail.id}>
                                 <TableCell>{listEmail.to}</TableCell>
                                 <TableCell>{listEmail.subject}</TableCell>
