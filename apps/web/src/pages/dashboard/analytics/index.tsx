@@ -122,7 +122,7 @@ export default function Charts() {
                           <ChartTooltipContent
                             hideIndicator
                             labelFormatter={(value) => {
-                              return new Date(value).toLocaleDateString(
+                              return new Date(value as string | number | Date).toLocaleDateString(
                                 'en-US',
                                 {
                                   day: 'numeric',
@@ -280,7 +280,7 @@ export default function Charts() {
                           <ChartTooltipContent
                             indicator='line'
                             labelFormatter={(value) => {
-                              return new Date(value).toLocaleDateString(
+                              return new Date(value as string | number | Date).toLocaleDateString(
                                 'en-US',
                                 {
                                   day: 'numeric',
