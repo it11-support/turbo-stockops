@@ -116,8 +116,8 @@ importers:
   apps/web:
     dependencies:
       '@fullcalendar/daygrid':
-        specifier: ^6.1.15
-        version: 6.1.20(@fullcalendar/core@7.0.2(@full-ui/headless-calendar@7.0.2(temporal-polyfill@1.0.4))(temporal-polyfill@1.0.4))
+        specifier: ^6.1.21
+        version: 6.1.21(@fullcalendar/core@7.0.2(@full-ui/headless-calendar@7.0.2(temporal-polyfill@1.0.4))(temporal-polyfill@1.0.4))
       '@fullcalendar/interaction':
         specifier: ^6.1.15
         version: 6.1.20(@fullcalendar/core@7.0.2(@full-ui/headless-calendar@7.0.2(temporal-polyfill@1.0.4))(temporal-polyfill@1.0.4))
@@ -633,11 +633,6 @@ packages:
     peerDependencies:
       '@full-ui/headless-calendar': 7.0.2
       temporal-polyfill: ^1.0.1
-
-  '@fullcalendar/daygrid@6.1.20':
-    resolution: {integrity: sha512-AO9vqhkLP77EesmJzuU+IGXgxNulsA8mgQHynclJ8U70vSwAVnbcLG9qftiTAFSlZjiY/NvhE7sflve6cJelyQ==}
-    peerDependencies:
-      '@fullcalendar/core': ~6.1.20
 
   '@fullcalendar/daygrid@6.1.21':
     resolution: {integrity: sha512-QYb1y40RGYLlOxKpYWg8O+7njEnKnFG8Tt7qjnubJGR35s1phQg67E+81y2TyAbbm59p2JFOCXGDk9t6KDujIA==}
@@ -5874,10 +5869,6 @@ snapshots:
     dependencies:
       '@full-ui/headless-calendar': 7.0.2(temporal-polyfill@1.0.4)
       temporal-polyfill: 1.0.4
-
-  '@fullcalendar/daygrid@6.1.20(@fullcalendar/core@7.0.2(@full-ui/headless-calendar@7.0.2(temporal-polyfill@1.0.4))(temporal-polyfill@1.0.4))':
-    dependencies:
-      '@fullcalendar/core': 7.0.2(@full-ui/headless-calendar@7.0.2(temporal-polyfill@1.0.4))(temporal-polyfill@1.0.4)
 
   '@fullcalendar/daygrid@6.1.21(@fullcalendar/core@7.0.2(@full-ui/headless-calendar@7.0.2(temporal-polyfill@1.0.4))(temporal-polyfill@1.0.4))':
     dependencies:
