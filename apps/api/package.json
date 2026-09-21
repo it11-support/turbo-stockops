@@ -29,7 +29,7 @@
     "@prisma/client": "^7.10.0",
     "@turbo-stockops/types": "workspace:*",
     "bcryptjs": "^3.0.3",
-    "cors": "^2.8.5",
+    "cors": "^2.8.6",
     "csv-parser": "^3.2.1",
     "dayjs": "^1.11.10",
     "dotenv": "^17.4.2",
