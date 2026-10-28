@@ -115,7 +115,7 @@ export function SalesOrderTable({ columns }: DataTableProps) {
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && 'selected'}
-                    className='group/row text-[0.75rem] hover:bg-muted'
+                    className='group/row hover:bg-muted text-[0.75rem]'
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell

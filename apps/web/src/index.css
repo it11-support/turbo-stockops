@@ -2,9 +2,47 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&family=Manrope&family=Roboto&display=swap');
 
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+
+  --font-manrope: "Manrope", sans-serif;
+  --font-inter: "Inter", sans-serif;
+  --font-roboto: "Roboto", sans-serif;
+}
 
 
 
@@ -111,10 +149,13 @@
   }
 
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
-  body {
-    @apply min-h-svh w-full bg-background text-foreground;
+    body {
+    min-height: 100svh;
+    width: 100%;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
   body > #root {
     @apply h-svh;
@@ -142,7 +183,29 @@
   }
 
   .faded-bottom {
-    @apply after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:hidden after:h-32 after:w-full after:bg-[linear-gradient(180deg,_transparent_10%,_hsl(var(--background))_70%)] after:md:block;
+    position: relative;
+  }
+
+  .faded-bottom::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: none;
+    height: 8rem;
+    width: 100%;
+    background: linear-gradient(
+      180deg,
+      transparent 10%,
+      hsl(var(--background)) 70%
+    );
+  }
+
+  @media (min-width: 768px) {
+    .faded-bottom::after {
+      display: block;
+    }
   }
 }
 

@@ -10,8 +10,10 @@
     "db:generate": "cd apps/api && npx prisma generate"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
     "prettier": "^3.9.10",
     "react-router": "^8.5.0",
+    "tailwindcss": "^4.3.3",
     "turbo": "^2.11.10",
     "typescript": "7.0.2"
   },
